@@ -13,6 +13,8 @@ import 'core/models/muscle_group_model.dart';
 import 'core/models/body_part_model.dart';
 import 'core/widgets/loading_page.dart';
 import 'features/exercises/data/bloc/exercise_bloc.dart';
+import 'features/workoutplans/data/bloc/workout_plan_bloc.dart';
+import 'features/challenges/data/bloc/challenge_bloc.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -37,7 +39,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [BlocProvider(create: (context) => ExerciseBloc())],
+      providers: [
+        BlocProvider(create: (context) => ExerciseBloc()),
+        BlocProvider(create: (context) => WorkoutPlanBloc()),
+        BlocProvider(create: (context) => ChallengeBloc()),
+      ],
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
         home: const LoadingPage(),

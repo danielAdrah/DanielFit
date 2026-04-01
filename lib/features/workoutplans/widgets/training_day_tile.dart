@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/theme.dart';
-import '../workout_plans_view.dart';
+import '../pages/workout_plans_view.dart';
 
 class TrainigDaysTille extends StatelessWidget {
   const TrainigDaysTille({

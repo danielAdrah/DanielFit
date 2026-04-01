@@ -8,6 +8,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 import '../../../core/theme.dart';
 import '../../../core/widgets/gearless_app_bar.dart';
+import '../../../core/widgets/helper.dart';
 import 'add_exercise.dart';
 import '../data/exercise_data.dart';
 import '../widgets/muscle_exercise_tile.dart';
@@ -41,13 +42,11 @@ class _MuscleExerciseState extends State<MuscleExercise> {
             body: BlocListener<ExerciseBloc, ExerciseState>(
               listener: (context, state) {
                 if (state is ExerciseError) {
-                  Get.snackbar(
+                  Helper().showSnackBar(
                     "Error",
                     "❌ Error: ${state.message}",
-                    colorText: Colors.white,
-                    backgroundColor: AppColors.secondary,
-                    snackPosition: SnackPosition.TOP,
-                    icon: Icon(Icons.error_outline, color: Colors.white),
+                    AppColors.secondary,
+                    Icons.error_outline,
                   );
                 }
               },
@@ -255,19 +254,17 @@ class _MuscleExerciseState extends State<MuscleExercise> {
                                                 ),
                                               );
                                             }
-
-                                            Get.snackbar(
+                                            Helper().showSnackBar(
                                               exercise.name,
                                               newFavoriteStatus
                                                   ? "Added to favorites ❤️"
                                                   : "Removed from favorites",
-                                              backgroundColor: newFavoriteStatus
+                                              newFavoriteStatus
                                                   ? Colors.green
                                                   : Colors.grey,
-                                              colorText: Colors.white,
-                                              snackPosition:
-                                                  SnackPosition.BOTTOM,
+                                              Icons.done_all,
                                             );
+
                                             Navigator.pop(context);
                                           },
                                           icon: exercise.isFavorite
@@ -309,18 +306,17 @@ class _MuscleExerciseState extends State<MuscleExercise> {
                                               );
                                             }
 
-                                            Get.snackbar(
+                                            Helper().showSnackBar(
                                               exercise.name,
                                               newHatedStatus
                                                   ? "Added to Hated 😤"
                                                   : "Removed from Hated",
-                                              backgroundColor: newHatedStatus
+                                              newHatedStatus
                                                   ? Colors.orange
                                                   : Colors.grey,
-                                              colorText: Colors.white,
-                                              snackPosition:
-                                                  SnackPosition.BOTTOM,
+                                              Icons.heart_broken,
                                             );
+
                                             Navigator.pop(context);
                                           },
                                           icon: exercise.isHated
@@ -515,13 +511,13 @@ class _MuscleExerciseState extends State<MuscleExercise> {
           ElevatedButton(
             onPressed: () {
               context.read<ExerciseBloc>().add(DeleteExerciseEvent(exerciseId));
-              Get.snackbar(
+              Helper().showSnackBar(
                 "Success",
                 "$exerciseName deleted",
-                backgroundColor: Colors.green,
-                snackPosition: SnackPosition.TOP,
-                icon: Icon(Icons.done_all, color: Colors.white),
+                Colors.green,
+                Icons.done_all,
               );
+
               Navigator.pop(context, true);
               Navigator.pop(context, true);
             },

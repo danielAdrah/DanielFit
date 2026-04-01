@@ -25,13 +25,14 @@ class ExerciseModelAdapter extends TypeAdapter<ExerciseModel> {
       createdAt: fields[5] as DateTime?,
       isFavorite: fields[6] as bool,
       isHated: fields[7] as bool,
+      isPlanExercise: fields[8] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, ExerciseModel obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class ExerciseModelAdapter extends TypeAdapter<ExerciseModel> {
       ..writeByte(6)
       ..write(obj.isFavorite)
       ..writeByte(7)
-      ..write(obj.isHated);
+      ..write(obj.isHated)
+      ..writeByte(8)
+      ..write(obj.isPlanExercise);
   }
 
   @override

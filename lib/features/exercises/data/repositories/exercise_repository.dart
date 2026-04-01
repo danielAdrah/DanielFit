@@ -48,7 +48,10 @@ class ExerciseRepositoryImpl implements ExerciseRepository {
   @override
   Future<List<ExerciseModel>> getAllExercises() async {
     try {
-      return _exercisesBox.values.toList();
+      // Filter out plan-specific exercises
+      return _exercisesBox.values
+          .where((exercise) => !exercise.isPlanExercise)
+          .toList();
     } catch (e) {
       throw Exception('Failed to load exercises: ${e.toString()}');
     }
@@ -131,8 +134,12 @@ class ExerciseRepositoryImpl implements ExerciseRepository {
   @override
   Future<List<ExerciseModel>> getExercisesByMuscle(String muscle) async {
     try {
+      // Filter out plan-specific exercises and filter by target muscle
       return _exercisesBox.values
-          .where((exercise) => exercise.targetMuscle == muscle)
+          .where(
+            (exercise) =>
+                exercise.targetMuscle == muscle && !exercise.isPlanExercise,
+          )
           .toList();
     } catch (e) {
       throw Exception('Failed to filter exercises by muscle: ${e.toString()}');

@@ -28,6 +28,9 @@ class ExerciseModel extends HiveObject {
   @HiveField(7)
   bool isHated;
 
+  @HiveField(8)
+  bool isPlanExercise;
+
   ExerciseModel({
     required this.id,
     required this.name,
@@ -37,6 +40,7 @@ class ExerciseModel extends HiveObject {
     DateTime? createdAt,
     this.isFavorite = false,
     this.isHated = false,
+    this.isPlanExercise = false,
   }) : createdAt = createdAt ?? DateTime.now();
 
   // Copy with method for immutability
@@ -49,6 +53,7 @@ class ExerciseModel extends HiveObject {
     DateTime? createdAt,
     bool? isFavorite,
     bool? isHated,
+    bool? isPlanExercise,
   }) {
     return ExerciseModel(
       id: id ?? this.id,
@@ -59,6 +64,7 @@ class ExerciseModel extends HiveObject {
       createdAt: createdAt ?? this.createdAt,
       isFavorite: isFavorite ?? this.isFavorite,
       isHated: isHated ?? this.isHated,
+      isPlanExercise: isPlanExercise ?? this.isPlanExercise,
     );
   }
 
@@ -73,6 +79,7 @@ class ExerciseModel extends HiveObject {
       'createdAt': createdAt.toIso8601String(),
       'isFavorite': isFavorite,
       'isHated': isHated,
+      'isPlanExercise': isPlanExercise,
     };
   }
 
@@ -89,6 +96,7 @@ class ExerciseModel extends HiveObject {
           : DateTime.now(),
       isFavorite: json['isFavorite'] ?? false,
       isHated: json['isHated'] ?? false,
+      isPlanExercise: json['isPlanExercise'] ?? false,
     );
   }
 }

@@ -3,7 +3,7 @@
 part of 'workout_plan_model.dart';
 
 // **************************************************************************
-// HiveGenerator
+// TypeAdapterGenerator
 // **************************************************************************
 
 class WorkoutPlanModelAdapter extends TypeAdapter<WorkoutPlanModel> {
@@ -17,13 +17,13 @@ class WorkoutPlanModelAdapter extends TypeAdapter<WorkoutPlanModel> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return WorkoutPlanModel(
-      id: (fields[0] as String?) ?? '',
-      planName: (fields[1] as String?) ?? '',
-      daysPerWeek: (fields[2] as int?) ?? 0,
-      workoutDayIds: (fields[3] as List<dynamic>?)?.cast<String>() ?? [],
-      createdAt: (fields[4] as DateTime?) ?? DateTime.now(),
+      id: fields[0] as String,
+      planName: fields[1] as String,
+      daysPerWeek: fields[2] as int,
+      workoutDayIds: (fields[3] as List?)?.cast<String>(),
+      createdAt: fields[4] as DateTime?,
       description: fields[5] as String?,
-      muscleCombinations: (fields[6] as List<dynamic>?)?.cast<String>() ?? [],
+      muscleCombinations: (fields[6] as List?)?.cast<String>(),
     );
   }
 

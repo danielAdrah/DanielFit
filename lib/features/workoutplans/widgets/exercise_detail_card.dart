@@ -1,8 +1,12 @@
+// ignore_for_file: deprecated_member_use
+
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import '../../../core/theme.dart';
 
-class ExerciseDetaisCard extends StatelessWidget {
+class ExerciseDetaisCard extends StatefulWidget {
   const ExerciseDetaisCard({
     super.key,
     required this.width,
@@ -19,12 +23,18 @@ class ExerciseDetaisCard extends StatelessWidget {
   final String imgUrl;
 
   @override
+  State<ExerciseDetaisCard> createState() => _ExerciseDetaisCardState();
+}
+
+class _ExerciseDetaisCardState extends State<ExerciseDetaisCard> {
+  @override
   Widget build(BuildContext context) {
     return Stack(
       clipBehavior: Clip.none,
       children: [
         Container(
           margin: EdgeInsets.symmetric(horizontal: 15),
+          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
             border: Border.all(
@@ -57,7 +67,7 @@ class ExerciseDetaisCard extends StatelessWidget {
             ],
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,7 +106,7 @@ class ExerciseDetaisCard extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        order,
+                        widget.order,
                         style: TextStyle(
                           color: AppColors.textPrimary,
                           fontWeight: FontWeight.bold,
@@ -109,7 +119,7 @@ class ExerciseDetaisCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        trainingName,
+                        widget.trainingName,
                         style: TextStyle(
                           color: AppColors.textPrimary,
                           fontFamily: "Montserrat",
@@ -127,7 +137,7 @@ class ExerciseDetaisCard extends StatelessWidget {
                       ),
                       SizedBox(height: 3),
                       Text(
-                        targetedMuscle,
+                        widget.targetedMuscle,
                         style: TextStyle(
                           color: AppColors.secondary.withOpacity(0.7),
                           fontFamily: "Montserrat",
@@ -147,17 +157,53 @@ class ExerciseDetaisCard extends StatelessWidget {
                   ),
                 ],
               ),
-
               SizedBox(width: 10),
               Column(
                 children: [
-                  SizedBox(height: 20),
-                  Image.asset(
-                    imgUrl,
-                    width: 80,
-                    height: 80,
-                    color: Colors.white.withOpacity(0.5),
-                  ),
+                  // SizedBox(height: 20),
+                  (widget.imgUrl.startsWith('http') ||
+                          widget.imgUrl.startsWith('/'))
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: Image.file(
+                            File(widget.imgUrl),
+                            width: 80,
+                            height: 80,
+                            // color: Colors.white.withOpacity(0.5),
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                width: 80,
+                                height: 80,
+                                color: Colors.grey.shade800,
+                                child: Icon(
+                                  Icons.fitness_center,
+                                  color: Colors.white54,
+                                  size: 40,
+                                ),
+                              );
+                            },
+                          ),
+                        )
+                      : Image.asset(
+                          widget.imgUrl,
+                          width: 80,
+                          height: 80,
+                          color: Colors.white.withOpacity(0.5),
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              width: 80,
+                              height: 80,
+                              color: Colors.grey.shade800,
+                              child: Icon(
+                                Icons.fitness_center,
+                                color: Colors.white54,
+                                size: 40,
+                              ),
+                            );
+                          },
+                        ),
                 ],
               ),
             ],
@@ -177,9 +223,9 @@ class ExerciseDetaisCard extends StatelessWidget {
         ),
         //for the red neon effect
         Container(
-          margin: EdgeInsets.symmetric(horizontal: width * 0.08),
+          margin: EdgeInsets.symmetric(horizontal: widget.width * 0.08),
           height: 1.7,
-          width: width * 0.8,
+          width: widget.width * 0.8,
           decoration: BoxDecoration(
             // color: AppColors.glowRed.withOpacity(0.6),
             gradient: LinearGradient(
@@ -208,14 +254,14 @@ class ExerciseDetaisCard extends StatelessWidget {
         ),
         Positioned(
           bottom: 1,
-          right: width / 8.8,
-          left: width / 12,
+          right: widget.width / 8.8,
+          left: widget.width / 12,
           child: Container(
             // margin: EdgeInsets.symmetric(
             //   horizontal: width * 2,
             // ),
             height: 1.7,
-            width: width,
+            width: widget.width,
             decoration: BoxDecoration(
               // color: AppColors.glowRed.withOpacity(0.6),
               gradient: LinearGradient(

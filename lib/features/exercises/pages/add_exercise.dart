@@ -5,7 +5,6 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../core/theme.dart';
 import '../../../core/models/exercise_model.dart';
@@ -13,6 +12,7 @@ import '../../../core/widgets/app_background.dart';
 import '../../../core/widgets/custom_text_field.dart';
 import '../../../core/widgets/gearless_app_bar.dart';
 import '../../../core/widgets/gradient_divider.dart';
+import '../../../core/widgets/helper.dart';
 import '../../../core/widgets/primary_btn.dart';
 import '../data/exercise_data.dart';
 
@@ -65,24 +65,21 @@ class _AddExerciseState extends State<AddExercise> {
             listener: (context, state) {
               if (state is ExerciseAdded) {
                 // Success - show snackbar and navigate back
-                Get.snackbar(
+                Helper().showSnackBar(
                   "Success",
                   "✅ Exercise added successfully!",
-                  colorText: Colors.white,
-                  backgroundColor: Colors.green,
-                  snackPosition: SnackPosition.TOP,
-                  icon: Icon(Icons.done_all_sharp, color: Colors.white),
+                  Colors.green,
+                  Icons.done_all_sharp,
                 );
+
                 Navigator.pop(context);
               } else if (state is ExerciseError) {
                 // Error - show error message
-                Get.snackbar(
+                Helper().showSnackBar(
                   "Error",
                   "❌ Error: ${state.message}",
-                  colorText: Colors.white,
-                  backgroundColor: AppColors.secondary,
-                  snackPosition: SnackPosition.TOP,
-                  icon: Icon(Icons.error_outline, color: Colors.white),
+                  AppColors.secondary,
+                  Icons.error_outline,
                 );
               }
             },
@@ -527,26 +524,24 @@ class _AddExerciseState extends State<AddExercise> {
   void _validateAndAddExercise() {
     // Validate inputs
     if (exerciseName.text.trim().isEmpty) {
-      Get.snackbar(
+      Helper().showSnackBar(
         "Warning",
-        '❌ Please enter exercise name',
-        colorText: Colors.white,
-        backgroundColor: Colors.orange,
-        snackPosition: SnackPosition.TOP,
-        icon: Icon(Icons.warning_amber, color: Colors.white),
+        "⚠ Please enter exercise name",
+        Colors.orange,
+        Icons.warning_amber,
       );
+
       return;
     }
 
     if (targetedMuscle == null || targetedMuscle!.isEmpty) {
-      Get.snackbar(
+      Helper().showSnackBar(
         "Warning",
-        "❌ Please select a target muscle",
-        colorText: Colors.white,
-        backgroundColor: Colors.orange,
-        snackPosition: SnackPosition.TOP,
-        icon: Icon(Icons.warning_amber, color: Colors.white),
+        "⚠ Please select a target muscle",
+        Colors.orange,
+        Icons.warning_amber,
       );
+
       return;
     }
 

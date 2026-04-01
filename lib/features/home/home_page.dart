@@ -11,7 +11,7 @@ import '../../core/widgets/tab_chip.dart';
 import '../challanges/challanges_view.dart';
 import '../exercises/pages/exercises_view.dart';
 import '../favoriteExercises/pages/favorite_Exercise_View.dart';
-import '../workoutplans/workout_plans_view.dart';
+import '../workoutplans/pages/workout_plans_view.dart';
 import 'challenge_card.dart';
 import 'favorite_exe_header.dart';
 import 'favorite_exe_tile.dart';
