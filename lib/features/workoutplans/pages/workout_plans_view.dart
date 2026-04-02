@@ -10,6 +10,7 @@ import '../../../core/widgets/app_background.dart';
 import '../../../core/widgets/gearless_app_bar.dart';
 import '../../../core/models/workout_plan_model.dart';
 import '../../../core/models/workout_day_model.dart';
+import '../../../core/widgets/helper.dart';
 import '../data/workout_plan_data.dart';
 import 'add_workout_plan.dart';
 import 'plan_detail.dart';
@@ -348,16 +349,32 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        title: Text('Delete Plan'),
+                                        backgroundColor: Colors.grey.shade900,
+                                        title: Text(
+                                          'Delete Plan',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontFamily: "Montserrat",
+                                          ),
+                                        ),
                                         content: Text(
                                           'Are you sure you want to delete "${plan.planName}"? This action cannot be undone.',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontFamily: "Montserrat",
+                                          ),
                                         ),
                                         actions: [
                                           TextButton(
                                             onPressed: () => Navigator.of(
                                               context,
                                             ).pop(false),
-                                            child: Text('Cancel'),
+                                            child: Text(
+                                              'Cancel',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
                                           ),
                                           ElevatedButton(
                                             onPressed: () =>
@@ -380,15 +397,11 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
                                   );
 
                                   // Show success message
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        'Workout plan deleted successfully!',
-                                      ),
-                                      backgroundColor: AppColors.primary,
-                                      behavior: SnackBarBehavior.floating,
-                                      duration: Duration(seconds: 2),
-                                    ),
+                                  Helper().showSnackBar(
+                                    "Success",
+                                    'Workout plan deleted successfully!',
+                                    Colors.green,
+                                    Icons.done_all,
                                   );
                                 },
                                 child: InkWell(

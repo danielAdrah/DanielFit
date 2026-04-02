@@ -14,7 +14,7 @@ import 'core/models/body_part_model.dart';
 import 'core/widgets/loading_page.dart';
 import 'features/exercises/data/bloc/exercise_bloc.dart';
 import 'features/workoutplans/data/bloc/workout_plan_bloc.dart';
-import 'features/challenges/data/bloc/challenge_bloc.dart';
+import 'features/challanges/data/bloc/challenge_bloc.dart';
 
 void main() async {
   await Hive.initFlutter();

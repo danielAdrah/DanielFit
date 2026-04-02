@@ -565,31 +565,7 @@ class _ExerciseItemCardState extends State<_ExerciseItemCard> {
     final ImagePicker picker = ImagePicker();
 
     // Show image source selection dialog
-    final ImageSource? source = await showDialog<ImageSource>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Select Image Source'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ListTile(
-                leading: const Icon(Icons.camera_alt),
-                title: const Text('Camera'),
-                onTap: () => Navigator.pop(context, ImageSource.camera),
-              ),
-              ListTile(
-                leading: const Icon(Icons.photo_library),
-                title: const Text('Gallery'),
-                onTap: () => Navigator.pop(context, ImageSource.gallery),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-
-    if (source == null) return; // User cancelled
+    final ImageSource source = ImageSource.gallery;
 
     try {
       final XFile? pickedFile = await picker.pickImage(

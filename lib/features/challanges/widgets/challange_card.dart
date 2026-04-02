@@ -1,45 +1,35 @@
 // ignore_for_file: deprecated_member_use, must_be_immutable
 
 import 'package:flutter/material.dart';
-
 import '../../../core/theme.dart';
+import '../../../core/models/challenge_model.dart';
+import '../../../core/widgets/helper.dart';
 import 'small_circular_btn.dart';
 
 class ChallangeCard extends StatefulWidget {
   ChallangeCard({
     super.key,
-    required this.width,
-    required this.challangeTitle,
-    required this.challangeDescription,
-    required this.progressValue,
-    required this.targetValue,
-    required this.type,
-    required this.isDone,
-    this.increase,
-    this.decrease,
-    this.complete,
+    required this.challenge,
+    this.onUpdateProgress,
+    this.onComplete,
   });
-  final bool isDone;
-  final String type;
-  final double width;
-  final String challangeTitle;
-  final String challangeDescription;
-  final String progressValue;
-  final String targetValue;
-  void Function()? increase;
-  void Function()? decrease;
-  void Function()? complete;
+
+  final ChallengeModel challenge;
+  final Function(double)? onUpdateProgress;
+  final VoidCallback? onComplete;
 
   @override
   State<ChallangeCard> createState() => _ChallangeCardState();
 }
 
 class _ChallangeCardState extends State<ChallangeCard> {
-  final progressedValue = TextEditingController();
+  late TextEditingController progressedValue;
 
   @override
   void initState() {
-    progressedValue.text = widget.progressValue;
+    progressedValue = TextEditingController(
+      text: widget.challenge.currentValue.toString(),
+    );
     super.initState();
   }
 
@@ -49,14 +39,59 @@ class _ChallangeCardState extends State<ChallangeCard> {
     super.dispose();
   }
 
+  void _incrementProgress() {
+    final newValue = widget.challenge.currentValue + 1;
+    if (widget.onUpdateProgress != null) {
+      widget.onUpdateProgress!(newValue);
+    }
+  }
+
+  void _decrementProgress() {
+    if (widget.challenge.currentValue > 0) {
+      final newValue = widget.challenge.currentValue - 1;
+      if (widget.onUpdateProgress != null) {
+        widget.onUpdateProgress!(newValue);
+      }
+    }
+  }
+
+  void _updateProgressFromText() {
+    final newValue = double.tryParse(progressedValue.text);
+    if (newValue != null && widget.onUpdateProgress != null) {
+      widget.onUpdateProgress!(newValue);
+    }
+  }
+
+  void _handleComplete() {
+    // Validate that progress has reached target before marking as complete
+    if (widget.challenge.currentValue < widget.challenge.targetValue) {
+      // Show error message - challenge cannot be marked complete yet
+      Helper().showSnackBar(
+        "Warning",
+        ' Challenge not complete yet! You need to reach at least ${widget.challenge.targetValue.toStringAsFixed(1)} ${widget.challenge.unit} before marking this challenge as complete.',
+        Colors.orange,
+        Icons.warning_amber_rounded,
+      );
+
+      return;
+    }
+
+    // Progress has reached target, mark as complete
+    if (widget.onComplete != null) {
+      widget.onComplete!();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final challenge = widget.challenge;
+    final isDone = challenge.isCompleted;
     return Stack(
       clipBehavior: Clip.none,
       children: [
         //main container
         Container(
-          width: widget.width,
+          width: MediaQuery.of(context).size.width,
           margin: EdgeInsets.symmetric(horizontal: 15),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
@@ -95,7 +130,7 @@ class _ChallangeCardState extends State<ChallangeCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  widget.challangeTitle,
+                  challenge.challengeName,
                   style: TextStyle(
                     color: AppColors.textPrimary,
                     fontFamily: "Montserrat",
@@ -113,7 +148,7 @@ class _ChallangeCardState extends State<ChallangeCard> {
                 ),
                 SizedBox(height: 5),
                 Text(
-                  widget.challangeDescription,
+                  challenge.description,
                   style: TextStyle(
                     color: AppColors.textSecondary,
                     fontFamily: "Poppins",
@@ -130,14 +165,14 @@ class _ChallangeCardState extends State<ChallangeCard> {
                   ),
                 ),
                 SizedBox(height: 3),
-                if (widget.type == "reps")
+                if (challenge.targetType == "Reps")
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Row(
                         children: [
                           Text(
-                            "${widget.progressValue} / ${widget.targetValue}",
+                            "${challenge.currentValue.toInt()} / ${challenge.targetValue.toInt()}",
                             style: TextStyle(
                               color: AppColors.textPrimary,
                               fontFamily: "Poppins",
@@ -151,17 +186,18 @@ class _ChallangeCardState extends State<ChallangeCard> {
                             width: 200,
                             child: LinearProgressIndicator(
                               backgroundColor: AppColors.cardBorder,
-                              color: widget.isDone
-                                  ? Colors.green
-                                  : AppColors.primary,
+                              color: isDone ? Colors.green : AppColors.primary,
                               borderRadius: BorderRadius.circular(8),
-                              value: 2,
+                              value:
+                                  (challenge.currentValue /
+                                          challenge.targetValue)
+                                      .clamp(0.0, 1.0),
                             ),
                           ),
                         ],
                       ),
 
-                      widget.isDone
+                      isDone
                           ? SmallCircluarBtn(
                               colors: [
                                 Colors.green,
@@ -178,7 +214,7 @@ class _ChallangeCardState extends State<ChallangeCard> {
                                     AppColors.secondary,
                                   ],
                                   icon: Icons.add,
-                                  onTap: widget.increase,
+                                  onTap: _incrementProgress,
                                 ),
                                 SizedBox(width: 5),
                                 SmallCircluarBtn(
@@ -187,13 +223,13 @@ class _ChallangeCardState extends State<ChallangeCard> {
                                     AppColors.metalDark,
                                   ],
                                   icon: Icons.remove,
-                                  onTap: widget.decrease,
+                                  onTap: _decrementProgress,
                                 ),
                               ],
                             ),
                     ],
                   ),
-                if (widget.type == "weight")
+                if (challenge.targetType == "Weight")
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -201,9 +237,10 @@ class _ChallangeCardState extends State<ChallangeCard> {
                         children: [
                           //the progress value which i can change by typing into the text field
                           SizedBox(
-                            width: widget.width * 0.1,
+                            width: MediaQuery.of(context).size.width * 0.1,
                             child: TextField(
                               controller: progressedValue,
+                              onSubmitted: (_) => _updateProgressFromText(),
                               style: TextStyle(
                                 color: AppColors.textPrimary,
                                 fontSize: 15,
@@ -224,7 +261,7 @@ class _ChallangeCardState extends State<ChallangeCard> {
                           ),
                           SizedBox(width: 2),
                           Text(
-                            widget.targetValue,
+                            challenge.targetValue.toInt().toString(),
                             style: TextStyle(
                               color: AppColors.textPrimary,
 
@@ -235,11 +272,11 @@ class _ChallangeCardState extends State<ChallangeCard> {
                         ],
                       ),
                       SmallCircluarBtn(
-                        colors: widget.isDone
+                        colors: isDone
                             ? [Colors.green, Colors.green.withOpacity(0.3)]
                             : [AppColors.primary, AppColors.secondary],
-                        icon: widget.isDone ? Icons.alarm_on_sharp : Icons.done,
-                        onTap: widget.isDone ? () {} : widget.complete,
+                        icon: isDone ? Icons.alarm_on_sharp : Icons.done,
+                        onTap: isDone ? () {} : _handleComplete,
                       ),
                     ],
                   ),
@@ -264,12 +301,14 @@ class _ChallangeCardState extends State<ChallangeCard> {
         //for the red neon effect
         IgnorePointer(
           child: Container(
-            margin: EdgeInsets.symmetric(horizontal: widget.width * 0.08),
+            margin: EdgeInsets.symmetric(
+              horizontal: MediaQuery.of(context).size.width * 0.08,
+            ),
             height: 1.7,
-            width: widget.width * 0.8,
+            width: MediaQuery.of(context).size.width * 0.8,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: widget.isDone
+                colors: isDone
                     ? [
                         Colors.green.withOpacity(0.2),
                         Colors.green,
@@ -284,7 +323,7 @@ class _ChallangeCardState extends State<ChallangeCard> {
 
               boxShadow: [
                 BoxShadow(
-                  color: widget.isDone ? Colors.green : AppColors.glowRed,
+                  color: isDone ? Colors.green : AppColors.glowRed,
                   blurRadius: 10,
                   offset: Offset(8, -1),
                   spreadRadius: 0.5,
@@ -295,18 +334,18 @@ class _ChallangeCardState extends State<ChallangeCard> {
         ),
         Positioned(
           bottom: 1,
-          right: widget.width / 4.8,
-          left: widget.width / 8,
+          right: MediaQuery.of(context).size.width / 4.8,
+          left: MediaQuery.of(context).size.width / 8,
           child: IgnorePointer(
             child: Container(
               // margin: EdgeInsets.symmetric(
               //   horizontal: width * 2,
               // ),
               height: 1.7,
-              width: widget.width,
+              width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: widget.isDone
+                  colors: isDone
                       ? [
                           Colors.green.withOpacity(0.2),
                           Colors.green,
@@ -320,7 +359,7 @@ class _ChallangeCardState extends State<ChallangeCard> {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: widget.isDone ? Colors.green : AppColors.glowRed,
+                    color: isDone ? Colors.green : AppColors.glowRed,
                     blurRadius: 10,
                     offset: Offset(8, -1),
                     spreadRadius: 0.5,

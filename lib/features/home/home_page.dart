@@ -8,7 +8,7 @@ import '../../core/widgets/custom_app_bar.dart';
 import '../../core/widgets/gradient_divider.dart';
 import '../../core/widgets/section_tile.dart';
 import '../../core/widgets/tab_chip.dart';
-import '../challanges/challanges_view.dart';
+import '../challanges/pages/challanges_view.dart';
 import '../exercises/pages/exercises_view.dart';
 import '../favoriteExercises/pages/favorite_Exercise_View.dart';
 import '../workoutplans/pages/workout_plans_view.dart';
