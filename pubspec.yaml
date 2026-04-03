@@ -46,6 +46,7 @@ dependencies:
   path: ^1.9.1
   flutter_slidable: ^4.0.3
   pie_chart: ^5.4.0
+  fl_chart: ^0.69.2
 
 dev_dependencies:
   flutter_test:

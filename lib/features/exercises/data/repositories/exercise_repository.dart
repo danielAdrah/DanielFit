@@ -36,6 +36,12 @@ abstract class ExerciseRepository {
 
   /// Get all hated exercises
   Future<List<ExerciseModel>> getHatedExercises();
+
+  /// Get total count of exercises
+  Future<int> getTotalExercisesCount();
+
+  /// Get total count of favorite exercises
+  Future<int> getFavoriteExercisesCount();
 }
 
 /// Hive implementation of the ExerciseRepository
@@ -165,6 +171,30 @@ class ExerciseRepositoryImpl implements ExerciseRepository {
           .toList();
     } catch (e) {
       throw Exception('Failed to load hated exercises: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<int> getTotalExercisesCount() async {
+    try {
+      return _exercisesBox.values
+          .where((exercise) => !exercise.isPlanExercise)
+          .length;
+    } catch (e) {
+      throw Exception('Failed to get total exercises count: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<int> getFavoriteExercisesCount() async {
+    try {
+      return _exercisesBox.values
+          .where((exercise) => exercise.isFavorite)
+          .length;
+    } catch (e) {
+      throw Exception(
+        'Failed to get favorite exercises count: ${e.toString()}',
+      );
     }
   }
 }

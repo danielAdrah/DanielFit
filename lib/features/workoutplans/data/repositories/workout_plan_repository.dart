@@ -45,6 +45,9 @@ abstract class WorkoutPlanRepository {
 
   /// Load exercises for a specific workout day
   Future<List<ExerciseModel>> getExercisesByDayIds(List<String> exerciseIds);
+
+  /// Get total count of workout plans
+  Future<int> getTotalWorkoutPlansCount();
 }
 
 /// Implementation of WorkoutPlanRepository using Hive
@@ -260,6 +263,15 @@ class WorkoutPlanRepositoryImpl implements WorkoutPlanRepository {
       return exercises;
     } catch (e) {
       throw Exception('Failed to load exercises: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<int> getTotalWorkoutPlansCount() async {
+    try {
+      return _workoutPlansBox.values.length;
+    } catch (e) {
+      throw Exception('Failed to get workout plans count: ${e.toString()}');
     }
   }
 }

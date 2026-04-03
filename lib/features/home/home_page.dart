@@ -2,6 +2,7 @@
 
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import '../../core/widgets/app_background.dart';
 import '../../core/widgets/custom_app_bar.dart';
@@ -12,6 +13,9 @@ import '../challanges/pages/challanges_view.dart';
 import '../exercises/pages/exercises_view.dart';
 import '../favoriteExercises/pages/favorite_Exercise_View.dart';
 import '../workoutplans/pages/workout_plans_view.dart';
+import '../profile/data/bloc/profile_bloc.dart';
+import '../profile/data/bloc/profile_event.dart';
+import '../profile/data/bloc/profile_state.dart';
 import 'challenge_card.dart';
 import 'favorite_exe_header.dart';
 import 'favorite_exe_tile.dart';
@@ -39,6 +43,16 @@ class _HomePageState extends State<HomePage> {
 
   final String challangeValue = "11";
   final String challangeName = "Pull-ups : 15 times";
+
+  @override
+  void initState() {
+    super.initState();
+    // Load statistics when the page is initialized
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ProfileBloc>().add(const LoadProfileStatisticsEvent());
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
@@ -56,32 +70,49 @@ class _HomePageState extends State<HomePage> {
                   //statistaics tabs
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
-                    child: ZoomIn(
-                      delay: Duration(milliseconds: 500),
-                      child: Row(
-                        children: [
-                          TabChip(
-                            imgUrl: "assets/img/dumbell.png",
-                            title: "Exercises",
-                            number: "20",
+                    child: BlocBuilder<ProfileBloc, ProfileState>(
+                      builder: (context, state) {
+                        // Default values for loading or error states
+                        int exercisesCount = 0;
+                        int favoritesCount = 0;
+                        int plansCount = 0;
+                        int challengesCount = 0;
+
+                        if (state is ProfileStatisticsLoaded) {
+                          exercisesCount = state.totalExercises;
+                          favoritesCount = state.totalFavorites;
+                          plansCount = state.totalPlans;
+                          challengesCount = state.totalChallenges;
+                        }
+
+                        return ZoomIn(
+                          delay: Duration(milliseconds: 500),
+                          child: Row(
+                            children: [
+                              TabChip(
+                                imgUrl: "assets/img/dumbell.png",
+                                title: "Exercises",
+                                number: exercisesCount.toString(),
+                              ),
+                              TabChip(
+                                imgUrl: "assets/img/list.png",
+                                title: "Workouts",
+                                number: plansCount.toString(),
+                              ),
+                              TabChip(
+                                imgUrl: "assets/img/fav.png",
+                                title: "Favorite",
+                                number: favoritesCount.toString(),
+                              ),
+                              TabChip(
+                                imgUrl: "assets/img/dart.png",
+                                title: "Challanges",
+                                number: challengesCount.toString(),
+                              ),
+                            ],
                           ),
-                          TabChip(
-                            imgUrl: "assets/img/list.png",
-                            title: "Workouts",
-                            number: "2",
-                          ),
-                          TabChip(
-                            imgUrl: "assets/img/fav.png",
-                            title: "Favorite",
-                            number: "3",
-                          ),
-                          TabChip(
-                            imgUrl: "assets/img/dart.png",
-                            title: "Challanges",
-                            number: "2",
-                          ),
-                        ],
-                      ),
+                        );
+                      },
                     ),
                   ),
                   SizedBox(height: height * 0.03),

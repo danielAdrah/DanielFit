@@ -34,6 +34,9 @@ abstract class ChallengeRepository {
 
   /// Get challenges by target type
   Future<List<ChallengeModel>> getChallengesByType(String targetType);
+
+  /// Get total count of challenges
+  Future<int> getTotalChallengesCount();
 }
 
 /// Hive implementation of the ChallengeRepository
@@ -157,6 +160,15 @@ class ChallengeRepositoryImpl implements ChallengeRepository {
           .toList();
     } catch (e) {
       throw Exception('Failed to filter challenges by type: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<int> getTotalChallengesCount() async {
+    try {
+      return _challengesBox.values.length;
+    } catch (e) {
+      throw Exception('Failed to get total challenges count: ${e.toString()}');
     }
   }
 }

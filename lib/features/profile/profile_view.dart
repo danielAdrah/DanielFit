@@ -1,13 +1,21 @@
 // ignore_for_file: deprecated_member_use
 
+import 'dart:io';
+
 import 'package:animate_do/animate_do.dart';
 import 'package:danielfit/core/widgets/app_background.dart';
 import 'package:danielfit/core/widgets/gradient_divider.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../core/theme.dart';
 import '../../core/widgets/gearless_app_bar.dart';
-import 'status_card.dart';
+import 'data/bloc/profile_bloc.dart';
+import 'data/bloc/profile_event.dart';
+import 'data/bloc/profile_state.dart';
+import 'widgets/status_card.dart';
+import 'widgets/muscle_group_pie_chart.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -17,8 +25,31 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
-  List<String> labels = ["Exercises", "Favorites", "Plans", "Challanges"];
-  List<String> values = ["20", "5", "3", "2"];
+  final GetStorage storage = GetStorage();
+
+  File? image;
+  String? imagePath;
+  final imagePicker = ImagePicker();
+  @override
+  void initState() {
+    super.initState();
+    // Load statistics when the page is initialized
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ProfileBloc>().add(const LoadProfileStatisticsEvent());
+    });
+    imagePath = storage.read('imagePath');
+  }
+
+  uploadImage() async {
+    var pickedImage = await imagePicker.pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      setState(() {
+        imagePath = pickedImage.path;
+        storage.write('imagePath', pickedImage.path);
+      });
+    } else {}
+  }
+
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
@@ -78,7 +109,9 @@ class _ProfileViewState extends State<ProfileView> {
                                       shape: BoxShape.circle,
                                       image: DecorationImage(
                                         //later we will use network image to fetch the real image
-                                        image: AssetImage("assets/img/bg3.jpg"),
+                                        image: imagePath == null
+                                            ? AssetImage("assets/img/bg3.jpg")
+                                            : FileImage(File(imagePath!)),
                                         fit: BoxFit.cover,
                                       ),
                                     ),
@@ -89,7 +122,9 @@ class _ProfileViewState extends State<ProfileView> {
                                   bottom: height * 0.07,
                                   right: 3,
                                   child: InkWell(
-                                    onTap: () {},
+                                    onTap: () {
+                                      uploadImage();
+                                    },
                                     child: Container(
                                       width: 40,
                                       height: 40,
@@ -161,44 +196,73 @@ class _ProfileViewState extends State<ProfileView> {
                         ),
                       ),
                       SizedBox(height: 30),
-                      SizedBox(
-                        width: width,
-                        height: height * 0.2,
-                        child: GridView.builder(
-                          physics: NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2, // 2 items per row
-                                crossAxisSpacing: 10,
-                                mainAxisSpacing: 10,
-                                childAspectRatio:
-                                    2.8, // Slightly taller than wide
-                              ),
-                          itemCount: labels.length,
-                          itemBuilder: (context, index) {
-                            if (index % 2 == 0) {
-                              return FadeInLeft(
-                                delay: Duration(milliseconds: 600),
-                                child: StatusCard(
-                                  height: height,
-                                  width: width,
-                                  label: labels[index],
-                                  value: values[index],
-                                ),
-                              );
-                            } else {
-                              return FadeInRight(
-                                delay: Duration(milliseconds: 600),
-                                child: StatusCard(
-                                  height: height,
-                                  width: width,
-                                  label: labels[index],
-                                  value: values[index],
-                                ),
-                              );
-                            }
-                          },
-                        ),
+                      BlocBuilder<ProfileBloc, ProfileState>(
+                        builder: (context, state) {
+                          // Default values for loading or error states
+                          int exercisesCount = 0;
+                          int favoritesCount = 0;
+                          int plansCount = 0;
+                          int challengesCount = 0;
+
+                          if (state is ProfileStatisticsLoaded) {
+                            exercisesCount = state.totalExercises;
+                            favoritesCount = state.totalFavorites;
+                            plansCount = state.totalPlans;
+                            challengesCount = state.totalChallenges;
+                          }
+
+                          final labels = [
+                            "Exercises",
+                            "Favorites",
+                            "Plans",
+                            "Challanges",
+                          ];
+                          final values = [
+                            exercisesCount.toString(),
+                            favoritesCount.toString(),
+                            plansCount.toString(),
+                            challengesCount.toString(),
+                          ];
+
+                          return SizedBox(
+                            width: width,
+                            height: height * 0.2,
+                            child: GridView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 10,
+                                    mainAxisSpacing: 10,
+                                    childAspectRatio: 2.8,
+                                  ),
+                              itemCount: labels.length,
+                              itemBuilder: (context, index) {
+                                if (index % 2 == 0) {
+                                  return FadeInLeft(
+                                    delay: Duration(milliseconds: 600),
+                                    child: StatusCard(
+                                      height: height,
+                                      width: width,
+                                      label: labels[index],
+                                      value: values[index],
+                                    ),
+                                  );
+                                } else {
+                                  return FadeInRight(
+                                    delay: Duration(milliseconds: 600),
+                                    child: StatusCard(
+                                      height: height,
+                                      width: width,
+                                      label: labels[index],
+                                      value: values[index],
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
+                          );
+                        },
                       ),
                       FadeIn(
                         delay: Duration(milliseconds: 750),
@@ -235,6 +299,27 @@ class _ProfileViewState extends State<ProfileView> {
                           height: height,
                         ),
                       ),
+                      SizedBox(height: height * 0.03),
+                      BlocBuilder<ProfileBloc, ProfileState>(
+                        builder: (context, state) {
+                          Map<String, int> muscleGroupDistribution = {};
+
+                          if (state is ProfileStatisticsLoaded) {
+                            muscleGroupDistribution =
+                                state.muscleGroupDistribution;
+                          }
+
+                          return FadeIn(
+                            delay: Duration(milliseconds: 900),
+                            child: MuscleGroupPieChart(
+                              muscleGroupDistribution: muscleGroupDistribution,
+                              width: width,
+                              height: height,
+                            ),
+                          );
+                        },
+                      ),
+                      SizedBox(height: 30),
                     ],
                   ),
                 ),

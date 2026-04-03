@@ -15,6 +15,7 @@ import 'core/widgets/loading_page.dart';
 import 'features/exercises/data/bloc/exercise_bloc.dart';
 import 'features/workoutplans/data/bloc/workout_plan_bloc.dart';
 import 'features/challanges/data/bloc/challenge_bloc.dart';
+import 'features/profile/data/bloc/profile_bloc.dart';
 
 void main() async {
   await Hive.initFlutter();
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => ExerciseBloc()),
         BlocProvider(create: (context) => WorkoutPlanBloc()),
         BlocProvider(create: (context) => ChallengeBloc()),
+        BlocProvider(create: (context) => ProfileBloc()),
       ],
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,

@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 
-import '../../core/theme.dart';
+import '../../../core/theme.dart';
 
 class StatusCard extends StatelessWidget {
   const StatusCard({
