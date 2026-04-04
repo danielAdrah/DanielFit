@@ -42,6 +42,9 @@ abstract class ExerciseRepository {
 
   /// Get total count of favorite exercises
   Future<int> getFavoriteExercisesCount();
+
+  /// Update highest weight for an exercise
+  Future<void> updateHighestWeight(String id, double highestWeight);
 }
 
 /// Hive implementation of the ExerciseRepository
@@ -195,6 +198,21 @@ class ExerciseRepositoryImpl implements ExerciseRepository {
       throw Exception(
         'Failed to get favorite exercises count: ${e.toString()}',
       );
+    }
+  }
+
+  @override
+  Future<void> updateHighestWeight(String id, double highestWeight) async {
+    try {
+      final exercise = _exercisesBox.get(id);
+      if (exercise != null) {
+        final updated = exercise.copyWith(highestWeight: highestWeight);
+        await _exercisesBox.put(id, updated);
+      } else {
+        throw Exception('Exercise not found: $id');
+      }
+    } catch (e) {
+      throw Exception('Failed to update highest weight: ${e.toString()}');
     }
   }
 }

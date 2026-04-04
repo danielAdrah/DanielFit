@@ -21,6 +21,7 @@ class ExerciseBloc extends Bloc<ExerciseEvent, ExerciseState> {
     on<GetExercisesByMuscleEvent>(_onGetExercisesByMuscle);
     on<GetFavoriteExercisesEvent>(_onGetFavoriteExercises);
     on<GetHatedExercisesEvent>(_onGetHatedExercises);
+    on<UpdateHighestWeightEvent>(_onUpdateHighestWeight);
   }
 
   /// Handle Load All Exercises Event
@@ -193,6 +194,32 @@ class ExerciseBloc extends Bloc<ExerciseEvent, ExerciseState> {
       emit(const ExerciseLoading());
       final exercises = await _repository.getHatedExercises();
       emit(ExerciseLoaded(exercises));
+    } catch (e) {
+      emit(ExerciseError(e.toString()));
+    }
+  }
+
+  /// Handle Update Highest Weight Event
+  Future<void> _onUpdateHighestWeight(
+    UpdateHighestWeightEvent event,
+    Emitter<ExerciseState> emit,
+  ) async {
+    try {
+      emit(const ExerciseLoading());
+      await _repository.updateHighestWeight(
+        event.exerciseId,
+        event.highestWeight,
+      );
+
+      // Get the updated exercise
+      final exercise = await _repository.getExerciseById(event.exerciseId);
+      if (exercise != null) {
+        emit(ExerciseHighestWeightUpdated(exercise));
+
+        // Show success by reloading all exercises for the muscle
+        final exercises = await _repository.getAllExercises();
+        emit(ExerciseLoaded(exercises));
+      }
     } catch (e) {
       emit(ExerciseError(e.toString()));
     }

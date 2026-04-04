@@ -95,3 +95,14 @@ class GetFavoriteExercisesEvent extends ExerciseEvent {
 class GetHatedExercisesEvent extends ExerciseEvent {
   const GetHatedExercisesEvent();
 }
+
+/// Event to update highest weight for an exercise
+class UpdateHighestWeightEvent extends ExerciseEvent {
+  final String exerciseId;
+  final double highestWeight;
+
+  const UpdateHighestWeightEvent(this.exerciseId, this.highestWeight);
+
+  @override
+  List<Object?> get props => [exerciseId, highestWeight];
+}

@@ -1210,56 +1210,6 @@ class _AddExerciseState extends State<AddExercise> {
             ),
           ),
         ),
-        //calves
-        Positioned(
-          top: height * 0.35,
-          left: width * 0.3,
-          child: InkWell(
-            splashColor: Colors.transparent,
-            onTap: () => _selectBodyPart("Calves"),
-            child: Container(
-              height: height * 0.11,
-              width: width * 0.1,
-              decoration: BoxDecoration(
-                color: selectedBodyPart == "Calves"
-                    ? Colors.white.withOpacity(0.3)
-                    : Colors.transparent,
-                border: Border.all(
-                  color: selectedBodyPart == "Calves"
-                      ? AppColors.cardBorder
-                      : Colors.transparent,
-                  width: 3,
-                ),
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
-          ),
-        ),
-        //calves
-        Positioned(
-          top: height * 0.35,
-          right: width * 0.3,
-          child: InkWell(
-            splashColor: Colors.transparent,
-            onTap: () => _selectBodyPart("Calves"),
-            child: Container(
-              height: height * 0.11,
-              width: width * 0.1,
-              decoration: BoxDecoration(
-                color: selectedBodyPart == "Calves"
-                    ? Colors.white.withOpacity(0.3)
-                    : Colors.transparent,
-                border: Border.all(
-                  color: selectedBodyPart == "Calves"
-                      ? AppColors.cardBorder
-                      : Colors.transparent,
-                  width: 3,
-                ),
-                borderRadius: BorderRadius.circular(20),
-              ),
-            ),
-          ),
-        ),
       ],
     );
   }

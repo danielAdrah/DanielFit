@@ -1,20 +1,22 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, must_be_immutable
 
 import 'package:flutter/material.dart';
 
 import '../theme.dart';
 
 class CustomTextField extends StatelessWidget {
-  const CustomTextField({
+  CustomTextField({
     super.key,
     required this.width,
     required this.controller,
     required this.height,
+    this.keyboardType,
   });
 
   final double width;
   final double height;
   final TextEditingController controller;
+  TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +68,7 @@ class CustomTextField extends StatelessWidget {
         ),
         Positioned(
           child: TextField(
+            keyboardType: keyboardType,
             style: TextStyle(color: AppColors.textPrimary),
             cursorColor: AppColors.textPrimary,
             controller: controller,

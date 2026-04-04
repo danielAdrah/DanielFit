@@ -27,6 +27,25 @@ class MuscleExercise extends StatefulWidget {
 }
 
 class _MuscleExerciseState extends State<MuscleExercise> {
+  final highestWeight = TextEditingController();
+  double currentWeightValue = 0.0;
+
+  void _incrementWeight() {
+    setState(() {
+      currentWeightValue += 2.5;
+      highestWeight.text = currentWeightValue.toStringAsFixed(1);
+    });
+  }
+
+  void _decrementWeight() {
+    setState(() {
+      if (currentWeightValue > 0) {
+        currentWeightValue -= 2.5;
+        highestWeight.text = currentWeightValue.toStringAsFixed(1);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
@@ -47,6 +66,13 @@ class _MuscleExerciseState extends State<MuscleExercise> {
                     "❌ Error: ${state.message}",
                     AppColors.secondary,
                     Icons.error_outline,
+                  );
+                } else if (state is ExerciseHighestWeightUpdated) {
+                  Helper().showSnackBar(
+                    "Success",
+                    "✅ Highest weight updated to ${state.exercise.highestWeight?.toStringAsFixed(1)} kg",
+                    Colors.green,
+                    Icons.check_circle,
                   );
                 }
               },
@@ -341,15 +367,81 @@ class _MuscleExerciseState extends State<MuscleExercise> {
                                       padding: const EdgeInsets.only(
                                         bottom: 20,
                                       ),
-                                      child: MuscleExerciseTile(
-                                        isDisplay: true,
-                                        width: width,
-                                        height: height,
-                                        exeNumber: statusText,
-                                        muscleName: exercise.name,
-                                        imgUrl:
-                                            exercise.imagePath ??
-                                            'assets/img/chest1.png',
+                                      child: InkWell(
+                                        splashColor: Colors.transparent,
+                                        highlightColor: Colors.transparent,
+                                        onTap: () {
+                                          // Initialize current weight value
+                                          setState(() {
+                                            currentWeightValue =
+                                                exercise.highestWeight ?? 0.0;
+                                            if (currentWeightValue > 0) {
+                                              highestWeight.text =
+                                                  currentWeightValue
+                                                      .toStringAsFixed(1);
+                                            } else {
+                                              highestWeight.clear();
+                                            }
+                                          });
+
+                                          showBottomSheet(
+                                            height,
+                                            width,
+                                            exercise.name,
+                                            exercise.id,
+                                            highestWeight,
+                                            exercise.highestWeight,
+                                            () {
+                                              // Validate and update highest weight
+                                              if (highestWeight.text.isEmpty) {
+                                                Helper().showSnackBar(
+                                                  "Error",
+                                                  "Please enter a weight value",
+                                                  Colors.red,
+                                                  Icons.error_outline,
+                                                );
+                                                return;
+                                              }
+
+                                              final weightValue =
+                                                  double.tryParse(
+                                                    highestWeight.text,
+                                                  );
+
+                                              if (weightValue == null ||
+                                                  weightValue <= 0) {
+                                                Helper().showSnackBar(
+                                                  "Error",
+                                                  "Please enter a valid weight value",
+                                                  Colors.red,
+                                                  Icons.error_outline,
+                                                );
+                                                return;
+                                              }
+
+                                              // Dispatch event to update highest weight
+                                              context.read<ExerciseBloc>().add(
+                                                UpdateHighestWeightEvent(
+                                                  exercise.id,
+                                                  weightValue,
+                                                ),
+                                              );
+                                              highestWeight.clear();
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                            },
+                                          );
+                                        },
+                                        child: MuscleExerciseTile(
+                                          isDisplay: true,
+                                          width: width,
+                                          height: height,
+                                          exeNumber: statusText,
+                                          muscleName: exercise.name,
+                                          imgUrl:
+                                              exercise.imagePath ??
+                                              'assets/img/chest1.png',
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -548,5 +640,404 @@ class _MuscleExerciseState extends State<MuscleExercise> {
     );
 
     // return confirmed ?? false;
+  }
+
+  //=======================
+  void showBottomSheet(
+    double height,
+    double width,
+    String exerciseName,
+    String exerciseId,
+    TextEditingController weightController,
+    double? previousWeight,
+    void Function() onTap,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return AnimatedPadding(
+              padding: MediaQuery.of(context).viewInsets,
+              duration: const Duration(milliseconds: 100),
+              child: Container(
+                height: previousWeight != null ? height * 0.55 : height * 0.45,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                  image: DecorationImage(
+                    image: AssetImage("assets/img/bg3.jpg"),
+                    fit: BoxFit.cover,
+                    colorFilter: ColorFilter.mode(
+                      Colors.black.withOpacity(0.3),
+                      BlendMode.darken,
+                    ),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    // Handle bar at top
+                    Container(
+                      margin: const EdgeInsets.only(top: 12, bottom: 8),
+                      width: 50,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+
+                    // Header with exercise name and icon
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 10,
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: AppColors.secondary.withOpacity(0.3),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Icon(
+                              Icons.fitness_center,
+                              color: AppColors.secondary,
+                              size: 28,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'New Record',
+                                  style: TextStyle(
+                                    color: AppColors.textSecondary,
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  exerciseName,
+                                  style: TextStyle(
+                                    color: AppColors.textPrimary,
+                                    fontFamily: 'Montserrat',
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    shadows: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.5),
+                                        blurRadius: 4,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 15),
+
+                    // Weight display card
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            AppColors.secondary.withOpacity(0.2),
+                            AppColors.secondary.withOpacity(0.05),
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: AppColors.secondary.withOpacity(0.3),
+                          width: 2,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          // Current/Highest weight display
+                          if (previousWeight != null && previousWeight > 0)
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.trending_up,
+                                    color: AppColors.primary,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    'Current Record: ',
+                                    style: TextStyle(
+                                      color: AppColors.textSecondary,
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${previousWeight.toStringAsFixed(1)} kg',
+                                    style: TextStyle(
+                                      color: AppColors.primary,
+                                      fontFamily: 'Montserrat',
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          if (previousWeight != null && previousWeight > 0)
+                            const SizedBox(height: 15),
+
+                          // Increment/Decrement buttons and input field
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // Decrement button
+                              GestureDetector(
+                                onTap: _decrementWeight,
+                                child: Container(
+                                  width: 50,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        AppColors.secondary,
+                                        AppColors.secondary.withOpacity(0.7),
+                                      ],
+                                    ),
+                                    borderRadius: BorderRadius.circular(15),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: AppColors.secondary.withOpacity(
+                                          0.5,
+                                        ),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 3),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Icon(
+                                    Icons.remove,
+                                    color: Colors.white,
+                                    size: 28,
+                                  ),
+                                ),
+                              ),
+
+                              const SizedBox(width: 15),
+
+                              // Weight input display
+                              Expanded(
+                                child: Container(
+                                  height: 60,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.15),
+                                    borderRadius: BorderRadius.circular(15),
+                                    border: Border.all(
+                                      color: AppColors.secondary.withOpacity(
+                                        0.5,
+                                      ),
+                                      width: 2,
+                                    ),
+                                  ),
+                                  child: TextField(
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                          decimal: true,
+                                        ),
+                                    controller: weightController,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: AppColors.textPrimary,
+                                      fontSize: 28,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Arvo',
+                                    ),
+                                    cursorColor: AppColors.secondary,
+                                    decoration: InputDecoration(
+                                      hintText: '0.0',
+                                      hintStyle: TextStyle(
+                                        color: AppColors.textSecondary
+                                            .withOpacity(0.4),
+                                        fontSize: 24,
+                                      ),
+                                      border: InputBorder.none,
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                            vertical: 15,
+                                          ),
+                                    ),
+                                    onChanged: (value) {
+                                      final parsed = double.tryParse(value);
+                                      if (parsed != null) {
+                                        setModalState(() {
+                                          currentWeightValue = parsed;
+                                        });
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ),
+
+                              const SizedBox(width: 15),
+
+                              // Increment button
+                              GestureDetector(
+                                onTap: _incrementWeight,
+                                child: Container(
+                                  width: 50,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        AppColors.secondary,
+                                        AppColors.secondary.withOpacity(0.7),
+                                      ],
+                                    ),
+                                    borderRadius: BorderRadius.circular(15),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: AppColors.secondary.withOpacity(
+                                          0.5,
+                                        ),
+                                        blurRadius: 8,
+                                        offset: const Offset(0, 3),
+                                      ),
+                                    ],
+                                  ),
+                                  child: Icon(
+                                    Icons.add,
+                                    color: Colors.white,
+                                    size: 28,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          const SizedBox(height: 10),
+
+                          // Unit label
+                          Text(
+                            'kilograms (kg)',
+                            style: TextStyle(
+                              color: AppColors.textSecondary.withOpacity(0.7),
+                              fontFamily: 'Montserrat',
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    const Spacer(),
+
+                    // Confirm button
+                    Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: InkWell(
+                        onTap: () {
+                          onTap();
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 30,
+                            vertical: 18,
+                          ),
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                AppColors.secondary,
+                                AppColors.secondary.withOpacity(0.8),
+                              ],
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                            ),
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.secondary.withOpacity(0.5),
+                                blurRadius: 12,
+                                offset: const Offset(0, 6),
+                                spreadRadius: 0,
+                              ),
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.3),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                                spreadRadius: 0,
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.check_circle_outline,
+                                color: Colors.white,
+                                size: 24,
+                              ),
+                              const SizedBox(width: 10),
+                              Text(
+                                'Save New Record',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: "Montserrat",
+                                  fontSize: 18,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 }

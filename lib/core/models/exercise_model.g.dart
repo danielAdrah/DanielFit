@@ -26,13 +26,14 @@ class ExerciseModelAdapter extends TypeAdapter<ExerciseModel> {
       isFavorite: fields[6] as bool,
       isHated: fields[7] as bool,
       isPlanExercise: fields[8] as bool,
+      highestWeight: fields[9] as double?,
     );
   }
 
   @override
   void write(BinaryWriter writer, ExerciseModel obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -50,7 +51,9 @@ class ExerciseModelAdapter extends TypeAdapter<ExerciseModel> {
       ..writeByte(7)
       ..write(obj.isHated)
       ..writeByte(8)
-      ..write(obj.isPlanExercise);
+      ..write(obj.isPlanExercise)
+      ..writeByte(9)
+      ..write(obj.highestWeight);
   }
 
   @override

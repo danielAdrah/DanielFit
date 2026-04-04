@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import '../../core/theme.dart';
 import '../../core/widgets/gradient_divider.dart';
 
-class CurrentChallengeCard extends StatelessWidget {
-  const CurrentChallengeCard({
+class ChallangeTile extends StatelessWidget {
+  const ChallangeTile({
     super.key,
     required this.width,
     required this.height,
@@ -104,7 +104,7 @@ class CurrentChallengeCard extends StatelessWidget {
                     ),
                     SizedBox(width: 3),
                     Text(
-                      "$challangeValue/15 ",
+                      challangeValue,
                       style: TextStyle(
                         color: AppColors.textPrimary,
                         fontWeight: FontWeight.w600,

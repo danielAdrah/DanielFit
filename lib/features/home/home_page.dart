@@ -9,6 +9,11 @@ import '../../core/widgets/custom_app_bar.dart';
 import '../../core/widgets/gradient_divider.dart';
 import '../../core/widgets/section_tile.dart';
 import '../../core/widgets/tab_chip.dart';
+import '../../core/theme.dart';
+import '../../../core/models/challenge_model.dart';
+import '../challanges/data/bloc/challenge_bloc.dart';
+import '../challanges/data/bloc/challenge_event.dart';
+import '../challanges/data/bloc/challenge_state.dart';
 import '../challanges/pages/challanges_view.dart';
 import '../exercises/pages/exercises_view.dart';
 import '../favoriteExercises/pages/favorite_Exercise_View.dart';
@@ -16,7 +21,7 @@ import '../workoutplans/pages/workout_plans_view.dart';
 import '../profile/data/bloc/profile_bloc.dart';
 import '../profile/data/bloc/profile_event.dart';
 import '../profile/data/bloc/profile_state.dart';
-import 'challenge_card.dart';
+import 'challenge_tile.dart';
 import 'favorite_exe_header.dart';
 import 'favorite_exe_tile.dart';
 
@@ -50,6 +55,8 @@ class _HomePageState extends State<HomePage> {
     // Load statistics when the page is initialized
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ProfileBloc>().add(const LoadProfileStatisticsEvent());
+      // Also load active challenges
+      context.read<ChallengeBloc>().add(GetActiveChallengesEvent());
     });
   }
 
@@ -186,14 +193,139 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(height: height * 0.01),
                   GradientDivider(width: width * 0.9),
                   SizedBox(height: height * 0.02),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: CurrentChallengeCard(
-                      width: width,
-                      height: height,
-                      challangeName: challangeName,
-                      challangeValue: challangeValue,
-                    ),
+                  // Challenge section with Bloc integration
+                  BlocBuilder<ChallengeBloc, ChallengeState>(
+                    builder: (context, state) {
+                      if (state is ChallengeLoading) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                AppColors.primary,
+                              ),
+                            ),
+                          ),
+                        );
+                      }
+
+                      // Get active challenges
+                      List<ChallengeModel> activeChallenges = [];
+                      if (state is ChallengeLoaded) {
+                        activeChallenges = state.challenges
+                            .where((c) => !c.isCompleted)
+                            .toList();
+                      }
+
+                      // If no active challenges, show placeholder
+                      if (activeChallenges.isEmpty) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: ZoomIn(
+                            delay: Duration(milliseconds: 800),
+                            child: Stack(
+                              children: [
+                                Container(
+                                  width: width,
+                                  height: height * 0.18,
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 15,
+                                    horizontal: 12,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                      color: AppColors.metalLight.withOpacity(
+                                        0.4,
+                                      ),
+                                      width: 1.5,
+                                    ),
+                                    image: DecorationImage(
+                                      image: AssetImage("assets/img/bg3.jpg"),
+                                      fit: BoxFit.cover,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.6),
+                                        blurRadius: 10,
+                                        offset: Offset(0, 5),
+                                        spreadRadius: 0,
+                                      ),
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.3),
+                                        blurRadius: 15,
+                                        offset: Offset(0, 8),
+                                        spreadRadius: -3,
+                                      ),
+                                      BoxShadow(
+                                        color: Colors.white.withOpacity(0.1),
+                                        blurRadius: 6,
+                                        offset: Offset(0, -3),
+                                        spreadRadius: 0,
+                                      ),
+                                    ],
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.emoji_events_outlined,
+                                        size: 50,
+                                        color: AppColors.textSecondary
+                                            .withOpacity(0.5),
+                                      ),
+                                      SizedBox(height: 12),
+                                      Text(
+                                        'No Active Challenges',
+                                        style: TextStyle(
+                                          color: AppColors.textPrimary,
+                                          fontWeight: FontWeight.w600,
+                                          fontFamily: "Montserrat",
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                      SizedBox(height: 8),
+                                      Text(
+                                        'Complete challenges or add new ones!',
+                                        style: TextStyle(
+                                          color: AppColors.textSecondary
+                                              .withOpacity(0.7),
+                                          fontWeight: FontWeight.w500,
+                                          fontFamily: "Montserrat",
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                // Dark overlay
+                                Positioned.fill(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.black.withOpacity(0.35),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }
+
+                      // Display the oldest active challenge (first in list)
+                      final challenge = activeChallenges.first;
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: ChallangeTile(
+                          width: width,
+                          height: height,
+                          challangeName: challenge.challengeName,
+                          challangeValue:
+                              '${challenge.currentValue.toInt()}/${challenge.targetValue.toInt()}',
+                        ),
+                      );
+                    },
                   ),
                   SizedBox(height: 50),
                 ],

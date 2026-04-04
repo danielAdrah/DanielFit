@@ -235,6 +235,7 @@ class _AddChallangeState extends State<AddChallange> {
                               width: width,
                               height: 40,
                               controller: targetValue,
+                              keyboardType: TextInputType.number,
                             ),
                             SizedBox(height: height * 0.02),
                             FormHeader(
@@ -246,6 +247,7 @@ class _AddChallangeState extends State<AddChallange> {
                               width: width,
                               height: 40,
                               controller: progressValue,
+                              keyboardType: TextInputType.number,
                             ),
                             SizedBox(height: height * 0.02),
                             FormHeader(

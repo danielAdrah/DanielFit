@@ -197,6 +197,7 @@ class MuscleExerciseTile extends StatelessWidget {
             ),
           ),
         ),
+
         //for the red neon effect
         Container(
           margin: EdgeInsets.symmetric(horizontal: width * 0.1),

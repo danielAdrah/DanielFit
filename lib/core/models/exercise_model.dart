@@ -31,6 +31,9 @@ class ExerciseModel extends HiveObject {
   @HiveField(8)
   bool isPlanExercise;
 
+  @HiveField(9)
+  double? highestWeight;
+
   ExerciseModel({
     required this.id,
     required this.name,
@@ -41,6 +44,7 @@ class ExerciseModel extends HiveObject {
     this.isFavorite = false,
     this.isHated = false,
     this.isPlanExercise = false,
+    this.highestWeight,
   }) : createdAt = createdAt ?? DateTime.now();
 
   // Copy with method for immutability
@@ -54,6 +58,7 @@ class ExerciseModel extends HiveObject {
     bool? isFavorite,
     bool? isHated,
     bool? isPlanExercise,
+    double? highestWeight,
   }) {
     return ExerciseModel(
       id: id ?? this.id,
@@ -65,6 +70,7 @@ class ExerciseModel extends HiveObject {
       isFavorite: isFavorite ?? this.isFavorite,
       isHated: isHated ?? this.isHated,
       isPlanExercise: isPlanExercise ?? this.isPlanExercise,
+      highestWeight: highestWeight ?? this.highestWeight,
     );
   }
 
@@ -80,6 +86,7 @@ class ExerciseModel extends HiveObject {
       'isFavorite': isFavorite,
       'isHated': isHated,
       'isPlanExercise': isPlanExercise,
+      'highestWeight': highestWeight,
     };
   }
 
@@ -97,6 +104,7 @@ class ExerciseModel extends HiveObject {
       isFavorite: json['isFavorite'] ?? false,
       isHated: json['isHated'] ?? false,
       isPlanExercise: json['isPlanExercise'] ?? false,
+      highestWeight: json['highestWeight']?.toDouble(),
     );
   }
 }

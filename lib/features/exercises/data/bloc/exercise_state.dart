@@ -98,3 +98,13 @@ class ExerciseError extends ExerciseState {
   @override
   List<Object?> get props => [message];
 }
+
+/// Highest weight updated successfully
+class ExerciseHighestWeightUpdated extends ExerciseState {
+  final ExerciseModel exercise;
+
+  const ExerciseHighestWeightUpdated(this.exercise);
+
+  @override
+  List<Object?> get props => [exercise];
+}
