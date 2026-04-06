@@ -27,6 +27,13 @@ class ProfileView extends StatefulWidget {
 class _ProfileViewState extends State<ProfileView> {
   final GetStorage storage = GetStorage();
 
+  List<String> icons = [
+    'assets/img/dumbell.png',
+    'assets/img/fav.png',
+    'assets/img/list.png',
+    'assets/img/muscle.png',
+  ];
+
   File? image;
   String? imagePath;
   final imagePicker = ImagePicker();
@@ -108,11 +115,10 @@ class _ProfileViewState extends State<ProfileView> {
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       image: DecorationImage(
-                                        //later we will use network image to fetch the real image
                                         image: imagePath == null
                                             ? AssetImage("assets/img/bg3.jpg")
                                             : FileImage(File(imagePath!)),
-                                        fit: BoxFit.cover,
+                                        // fit: BoxFit.cover,
                                       ),
                                     ),
                                   ),
@@ -136,6 +142,32 @@ class _ProfileViewState extends State<ProfileView> {
                                           ),
                                           fit: BoxFit.cover,
                                         ),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(
+                                              0.6,
+                                            ),
+                                            blurRadius: 10,
+                                            offset: Offset(0, 5),
+                                            spreadRadius: 0,
+                                          ),
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(
+                                              0.3,
+                                            ),
+                                            blurRadius: 15,
+                                            offset: Offset(0, 8),
+                                            spreadRadius: -3,
+                                          ),
+                                          BoxShadow(
+                                            color: Colors.white.withOpacity(
+                                              0.1,
+                                            ),
+                                            blurRadius: 6,
+                                            offset: Offset(0, -3),
+                                            spreadRadius: 0,
+                                          ),
+                                        ],
                                       ),
                                       child: Center(
                                         child: Icon(
@@ -246,6 +278,7 @@ class _ProfileViewState extends State<ProfileView> {
                                       width: width,
                                       label: labels[index],
                                       value: values[index],
+                                      iconOverlay: icons[index],
                                     ),
                                   );
                                 } else {
@@ -256,6 +289,7 @@ class _ProfileViewState extends State<ProfileView> {
                                       width: width,
                                       label: labels[index],
                                       value: values[index],
+                                      iconOverlay: icons[index],
                                     ),
                                   );
                                 }
@@ -299,7 +333,9 @@ class _ProfileViewState extends State<ProfileView> {
                           height: height,
                         ),
                       ),
-                      SizedBox(height: height * 0.03),
+                      SizedBox(height: height * 0.04),
+                      GradientDivider(width: width * 0.9),
+                      SizedBox(height: height * 0.02),
                       BlocBuilder<ProfileBloc, ProfileState>(
                         builder: (context, state) {
                           Map<String, int> muscleGroupDistribution = {};
@@ -319,6 +355,8 @@ class _ProfileViewState extends State<ProfileView> {
                           );
                         },
                       ),
+                      SizedBox(height: 20),
+                      GradientDivider(width: width * 0.9),
                       SizedBox(height: 30),
                     ],
                   ),

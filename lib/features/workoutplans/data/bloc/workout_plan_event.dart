@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
 import '../../../../core/models/workout_plan_model.dart';
-import '../../../../core/models/workout_day_model.dart';
-import '../../../../core/models/exercise_model.dart';
 
 /// Base event for WorkoutPlan BLoC
 abstract class WorkoutPlanEvent extends Equatable {

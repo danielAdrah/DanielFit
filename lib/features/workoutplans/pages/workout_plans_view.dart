@@ -406,6 +406,7 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
                                 },
                                 child: InkWell(
                                   splashColor: Colors.transparent,
+                                  highlightColor: Colors.transparent,
                                   onTap: () {
                                     Get.to(() => PlanDetail(plan: plan));
                                   },
@@ -556,62 +557,73 @@ class _WorkoutPlansState extends State<WorkoutPlans> {
                                           ),
                                         ),
                                         //container acted as a bar for the pull ups , only displayed with the exe3 image
-                                        muscleCombos.length >= 5
-                                            ? Positioned(
-                                                right: width * 0.07,
-                                                top: height * 0.055,
-                                                child: Container(
-                                                  width: width * 0.4,
-                                                  height: 3,
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.black,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          15,
-                                                        ),
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                        color: Colors.black
-                                                            .withOpacity(0.6),
-                                                        blurRadius: 10,
-                                                        offset: Offset(0, 5),
-                                                        spreadRadius: 0,
-                                                      ),
-                                                      BoxShadow(
-                                                        color: Colors.black
-                                                            .withOpacity(0.3),
-                                                        blurRadius: 15,
-                                                        offset: Offset(0, 8),
-                                                        spreadRadius: -3,
-                                                      ),
-                                                      BoxShadow(
-                                                        color: Colors.white
-                                                            .withOpacity(0.1),
-                                                        blurRadius: 6,
-                                                        offset: Offset(0, -3),
-                                                        spreadRadius: 0,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              )
-                                            : Container(),
+                                        // muscleCombos.length >= 5
+                                        //     ? Positioned(
+                                        //         right: width * 0.07,
+                                        //         top: height * 0.063,
+                                        //         child: Container(
+                                        //           width: width * 0.4,
+                                        //           height: 3,
+                                        //           decoration: BoxDecoration(
+                                        //             color: Colors.black,
+                                        //             borderRadius:
+                                        //                 BorderRadius.circular(
+                                        //                   15,
+                                        //                 ),
+                                        //             boxShadow: [
+                                        //               BoxShadow(
+                                        //                 color: Colors.black
+                                        //                     .withOpacity(0.6),
+                                        //                 blurRadius: 10,
+                                        //                 offset: Offset(0, 5),
+                                        //                 spreadRadius: 0,
+                                        //               ),
+                                        //               BoxShadow(
+                                        //                 color: Colors.black
+                                        //                     .withOpacity(0.3),
+                                        //                 blurRadius: 15,
+                                        //                 offset: Offset(0, 8),
+                                        //                 spreadRadius: -3,
+                                        //               ),
+                                        //               BoxShadow(
+                                        //                 color: Colors.white
+                                        //                     .withOpacity(0.1),
+                                        //                 blurRadius: 6,
+                                        //                 offset: Offset(0, -3),
+                                        //                 spreadRadius: 0,
+                                        //               ),
+                                        //             ],
+                                        //           ),
+                                        //         ),
+                                        //       )
+                                        //     : Container(),
                                         //person bg overlay
                                         Positioned(
-                                          right: 5,
+                                          right: muscleCombos.length >= 5
+                                              ? 1
+                                              : 5,
                                           top:
                                               _calculateCardHeight(
                                                     muscleCombos.length,
                                                     height,
                                                   ) /
                                                   2 -
-                                              (height * 0.22) / 2,
+                                              (height * 0.23) / 2,
                                           child: muscleCombos.length >= 5
                                               ? SizedBox(
-                                                  height: height * 0.3,
-                                                  width: width * 0.5,
+                                                  height: height * 0.25,
+                                                  width: width * 0.45,
                                                   child: Image.asset(
-                                                    "assets/img/exe3.png",
+                                                    "assets/img/exe2.png",
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                )
+                                              : muscleCombos.length == 4
+                                              ? SizedBox(
+                                                  height: height * 0.22,
+                                                  width: width * 0.52,
+                                                  child: Image.asset(
+                                                    "assets/img/exe4.png",
                                                     fit: BoxFit.cover,
                                                   ),
                                                 )

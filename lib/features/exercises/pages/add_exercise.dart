@@ -647,7 +647,7 @@ class _AddExerciseState extends State<AddExercise> {
         //Back
         Positioned(
           top: height * 0.07,
-          left: width * 0.33,
+          left: width * 0.322,
           child: InkWell(
             splashColor: Colors.transparent,
             onTap: () => _selectBodyPart("Back"),
@@ -723,7 +723,7 @@ class _AddExerciseState extends State<AddExercise> {
         //Triceps
         Positioned(
           top: height * 0.11,
-          right: width * 0.25,
+          right: width * 0.23,
           child: InkWell(
             splashColor: Colors.transparent,
             onTap: () => _selectBodyPart("Triceps"),
@@ -748,7 +748,7 @@ class _AddExerciseState extends State<AddExercise> {
         //Triceps
         Positioned(
           top: height * 0.11,
-          left: width * 0.25,
+          left: width * 0.23,
           child: InkWell(
             splashColor: Colors.transparent,
             onTap: () => _selectBodyPart("Triceps"),
@@ -773,7 +773,7 @@ class _AddExerciseState extends State<AddExercise> {
         //lats
         Positioned(
           top: height * 0.135,
-          left: width * 0.33,
+          left: width * 0.324,
           child: InkWell(
             splashColor: Colors.transparent,
             onTap: () => _selectBodyPart("Lats"),
@@ -798,7 +798,7 @@ class _AddExerciseState extends State<AddExercise> {
         //forearm
         Positioned(
           top: height * 0.17,
-          left: width * 0.2,
+          left: width * 0.18,
           child: InkWell(
             splashColor: Colors.transparent,
             onTap: () => _selectBodyPart("forearm"),
@@ -823,7 +823,7 @@ class _AddExerciseState extends State<AddExercise> {
         //forearm
         Positioned(
           top: height * 0.17,
-          right: width * 0.2,
+          right: width * 0.18,
           child: InkWell(
             splashColor: Colors.transparent,
             onTap: () => _selectBodyPart("forearm"),
@@ -848,13 +848,13 @@ class _AddExerciseState extends State<AddExercise> {
         //Hamstrings
         Positioned(
           top: height * 0.26,
-          right: width * 0.31,
+          right: width * 0.29,
           child: InkWell(
             splashColor: Colors.transparent,
             onTap: () => _selectBodyPart("Hamstrings"),
             child: Container(
               height: height * 0.1,
-              width: width * 0.12,
+              width: width * 0.13,
               decoration: BoxDecoration(
                 color: selectedBodyPart == "Hamstrings"
                     ? Colors.white.withOpacity(0.3)
@@ -873,13 +873,13 @@ class _AddExerciseState extends State<AddExercise> {
         //Hamstrings
         Positioned(
           top: height * 0.26,
-          left: width * 0.31,
+          left: width * 0.29,
           child: InkWell(
             splashColor: Colors.transparent,
             onTap: () => _selectBodyPart("Hamstrings"),
             child: Container(
               height: height * 0.1,
-              width: width * 0.12,
+              width: width * 0.13,
               decoration: BoxDecoration(
                 color: selectedBodyPart == "Hamstrings"
                     ? Colors.white.withOpacity(0.3)
@@ -898,13 +898,13 @@ class _AddExerciseState extends State<AddExercise> {
         //calves
         Positioned(
           top: height * 0.35,
-          left: width * 0.3,
+          left: width * 0.28,
           child: InkWell(
             splashColor: Colors.transparent,
             onTap: () => _selectBodyPart("Calves"),
             child: Container(
               height: height * 0.11,
-              width: width * 0.1,
+              width: width * 0.11,
               decoration: BoxDecoration(
                 color: selectedBodyPart == "Calves"
                     ? Colors.white.withOpacity(0.3)
@@ -923,13 +923,13 @@ class _AddExerciseState extends State<AddExercise> {
         //calves
         Positioned(
           top: height * 0.35,
-          right: width * 0.3,
+          right: width * 0.28,
           child: InkWell(
             splashColor: Colors.transparent,
             onTap: () => _selectBodyPart("Calves"),
             child: Container(
               height: height * 0.11,
-              width: width * 0.1,
+              width: width * 0.11,
               decoration: BoxDecoration(
                 color: selectedBodyPart == "Calves"
                     ? Colors.white.withOpacity(0.3)
@@ -962,7 +962,7 @@ class _AddExerciseState extends State<AddExercise> {
         //chest
         Positioned(
           top: height * 0.09,
-          left: width * 0.33,
+          left: width * 0.32,
           child: InkWell(
             splashColor: Colors.transparent,
             onTap: () => _selectBodyPart("chest"),
@@ -987,8 +987,8 @@ class _AddExerciseState extends State<AddExercise> {
         ),
         //shoulders
         Positioned(
-          top: height * 0.075,
-          left: width * 0.19,
+          top: height * 0.079,
+          left: width * 0.18,
           child: InkWell(
             onTap: () => _selectBodyPart("shoulders"),
             splashColor: Colors.transparent,
@@ -1012,8 +1012,8 @@ class _AddExerciseState extends State<AddExercise> {
         ),
         //shoulders
         Positioned(
-          top: height * 0.075,
-          right: width * 0.2,
+          top: height * 0.079,
+          right: width * 0.19,
           child: InkWell(
             splashColor: Colors.transparent,
             onTap: () => _selectBodyPart("shoulders"),
@@ -1038,7 +1038,7 @@ class _AddExerciseState extends State<AddExercise> {
         //bieceps
         Positioned(
           top: height * 0.12,
-          right: width * 0.25,
+          right: width * 0.23,
           child: InkWell(
             splashColor: Colors.transparent,
             onTap: () => _selectBodyPart("bieceps"),
@@ -1063,7 +1063,7 @@ class _AddExerciseState extends State<AddExercise> {
         //bieceps
         Positioned(
           top: height * 0.12,
-          left: width * 0.25,
+          left: width * 0.23,
           child: InkWell(
             splashColor: Colors.transparent,
             onTap: () => _selectBodyPart("bieceps"),
@@ -1087,14 +1087,14 @@ class _AddExerciseState extends State<AddExercise> {
         ),
         //abs
         Positioned(
-          top: height * 0.135,
-          left: width * 0.38,
+          top: height * 0.137,
+          left: width * 0.37,
           child: InkWell(
             splashColor: Colors.transparent,
             onTap: () => _selectBodyPart("Abs"),
             child: Container(
               height: height * 0.1,
-              width: width * 0.11,
+              width: width * 0.12,
               decoration: BoxDecoration(
                 color: selectedBodyPart == "Abs"
                     ? Colors.white.withOpacity(0.3)
@@ -1105,7 +1105,7 @@ class _AddExerciseState extends State<AddExercise> {
                       : Colors.transparent,
                   width: 2,
                 ),
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: BorderRadius.circular(13),
               ),
             ),
           ),
@@ -1113,7 +1113,7 @@ class _AddExerciseState extends State<AddExercise> {
         //forearm
         Positioned(
           top: height * 0.17,
-          left: width * 0.2,
+          left: width * 0.18,
           child: InkWell(
             splashColor: Colors.transparent,
             onTap: () => _selectBodyPart("forearm"),
@@ -1138,7 +1138,7 @@ class _AddExerciseState extends State<AddExercise> {
         //forearm
         Positioned(
           top: height * 0.17,
-          right: width * 0.2,
+          right: width * 0.18,
           child: InkWell(
             splashColor: Colors.transparent,
             onTap: () => _selectBodyPart("forearm"),
@@ -1162,13 +1162,13 @@ class _AddExerciseState extends State<AddExercise> {
         ),
         //quad
         Positioned(
-          top: height * 0.22,
-          right: width * 0.31,
+          top: height * 0.23,
+          right: width * 0.3,
           child: InkWell(
             splashColor: Colors.transparent,
             onTap: () => _selectBodyPart("Quad"),
             child: Container(
-              height: height * 0.12,
+              height: height * 0.11,
               width: width * 0.12,
               decoration: BoxDecoration(
                 color: selectedBodyPart == "Quad"
@@ -1187,13 +1187,13 @@ class _AddExerciseState extends State<AddExercise> {
         ),
         //quad
         Positioned(
-          top: height * 0.22,
-          left: width * 0.31,
+          top: height * 0.23,
+          left: width * 0.29,
           child: InkWell(
             splashColor: Colors.transparent,
             onTap: () => _selectBodyPart("Quad"),
             child: Container(
-              height: height * 0.12,
+              height: height * 0.11,
               width: width * 0.12,
               decoration: BoxDecoration(
                 color: selectedBodyPart == "Quad"

@@ -191,6 +191,7 @@ class _ExercisesViewState extends State<ExercisesView> {
 
                           return InkWell(
                             splashColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
                             onTap: () {
                               Get.to(
                                 () => MuscleExercise(

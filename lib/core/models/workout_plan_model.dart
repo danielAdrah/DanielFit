@@ -1,6 +1,4 @@
 import 'package:hive/hive.dart';
-import 'workout_day_model.dart';
-
 part 'workout_plan_model.g.dart';
 
 @HiveType(typeId: 2)

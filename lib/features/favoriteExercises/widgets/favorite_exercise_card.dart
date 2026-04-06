@@ -130,7 +130,7 @@ class _FavoritExerciseCardState extends State<FavoritExerciseCard>
                   left: 3,
                   right: 3,
                   top: 3,
-                  bottom: widget.height * 0.04,
+                  bottom: widget.height * 0.05,
                 ),
                 width: widget.width * 0.4,
                 height: widget.height * 0.3,
@@ -220,6 +220,7 @@ class _FavoritExerciseCardState extends State<FavoritExerciseCard>
               ),
               // The exercise name with enhanced styling
               Positioned(
+                width: 150,
                 bottom: 2,
                 child: AnimatedDefaultTextStyle(
                   duration: Duration(milliseconds: 300),

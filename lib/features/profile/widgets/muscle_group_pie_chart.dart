@@ -48,22 +48,49 @@ class _MuscleGroupPieChartState extends State<MuscleGroupPieChart> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Section Title
-        Row(
-          children: [
-            Image.asset("assets/img/dumbell.png", width: 20, height: 20),
-            SizedBox(width: 4),
-            Text(
-              "Muscle Focus",
-              style: TextStyle(
-                color: AppColors.textSecondary,
-                fontFamily: "Montserrat",
-                fontWeight: FontWeight.w600,
-                fontSize: 15,
+        Container(
+          padding: EdgeInsets.symmetric(vertical: 3),
+          margin: EdgeInsets.only(right: widget.width * 0.53),
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.6),
+                blurRadius: 10,
+                offset: Offset(0, 5),
+                spreadRadius: 0,
               ),
-            ),
-          ],
+              BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                blurRadius: 15,
+                offset: Offset(0, 8),
+                spreadRadius: -3,
+              ),
+              BoxShadow(
+                color: Colors.red.withOpacity(0.1),
+                blurRadius: 6,
+                offset: Offset(0, -3),
+                spreadRadius: 0,
+              ),
+            ],
+          ),
+
+          child: Row(
+            children: [
+              Image.asset("assets/img/muscle.png", width: 20, height: 20),
+              SizedBox(width: 4),
+              Text(
+                "Muscle Focus",
+                style: TextStyle(
+                  color: AppColors.textSecondary,
+                  fontFamily: "Montserrat",
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15,
+                ),
+              ),
+            ],
+          ),
         ),
-        // SizedBox(height: 15),
+
         // Pie Chart with Legend
         AspectRatio(
           aspectRatio: 1.2,
@@ -98,7 +125,7 @@ class _MuscleGroupPieChartState extends State<MuscleGroupPieChart> {
                   value: entry.value.toDouble(),
                   title: muscles[i].key,
                   titleStyle: TextStyle(
-                    fontSize: (isTouched || isSelected) ? 15 : 12,
+                    fontSize: (isTouched || isSelected) ? 13 : 11,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                     fontFamily: "Montserrat",
