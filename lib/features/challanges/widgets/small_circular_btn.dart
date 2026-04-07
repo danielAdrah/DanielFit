@@ -16,8 +16,8 @@ class SmallCircluarBtn extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        width: 40,
-        height: 40,
+        width: 30,
+        height: 30,
         decoration: BoxDecoration(
           gradient: LinearGradient(colors: colors),
           shape: BoxShape.circle,

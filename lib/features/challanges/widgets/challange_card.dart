@@ -24,6 +24,7 @@ class ChallangeCard extends StatefulWidget {
 
 class _ChallangeCardState extends State<ChallangeCard> {
   late TextEditingController progressedValue;
+  bool _isFocused = false;
 
   @override
   void initState() {
@@ -31,6 +32,15 @@ class _ChallangeCardState extends State<ChallangeCard> {
       text: widget.challenge.currentValue.toString(),
     );
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(ChallangeCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Update the text controller when the challenge prop changes
+    if (oldWidget.challenge.currentValue != widget.challenge.currentValue) {
+      progressedValue.text = widget.challenge.currentValue.toString();
+    }
   }
 
   @override
@@ -91,6 +101,9 @@ class _ChallangeCardState extends State<ChallangeCard> {
       children: [
         //main container
         Container(
+          key: ValueKey(
+            '${widget.challenge.id}_${widget.challenge.currentValue}',
+          ),
           width: MediaQuery.of(context).size.width,
           margin: EdgeInsets.symmetric(horizontal: 15),
           decoration: BoxDecoration(
@@ -172,7 +185,7 @@ class _ChallangeCardState extends State<ChallangeCard> {
                       Row(
                         children: [
                           Text(
-                            "${challenge.currentValue.toInt()} / ${challenge.targetValue.toInt()}",
+                            "${widget.challenge.currentValue.toInt()} / ${widget.challenge.targetValue.toInt()}",
                             style: TextStyle(
                               color: AppColors.textPrimary,
                               fontFamily: "Poppins",
@@ -184,15 +197,29 @@ class _ChallangeCardState extends State<ChallangeCard> {
                           SizedBox(
                             height: 6,
                             width: 200,
-                            child: LinearProgressIndicator(
-                              backgroundColor: AppColors.cardBorder,
-                              color: isDone ? Colors.green : AppColors.primary,
-                              borderRadius: BorderRadius.circular(8),
-                              value:
-                                  (challenge.currentValue /
-                                          challenge.targetValue)
-                                      .clamp(0.0, 1.0),
-                            ),
+                            child:
+                                //  LinearProgressBar(
+                                //   maxSteps: 100,
+                                //   progressType: ProgressType.linear,
+                                //   currentStep: 5,
+                                //   progressColor: Colors.blue,
+                                //   backgroundColor: Colors.grey.shade300,
+                                //   animateProgress: true,
+                                //   animationDuration: Duration(milliseconds: 500),
+                                //   animationCurve: Curves.easeInOut,
+                                // ),
+                                LinearProgressIndicator(
+                                  backgroundColor: AppColors.cardBorder,
+                                  color: isDone
+                                      ? Colors.green
+                                      : AppColors.primary,
+                                  borderRadius: BorderRadius.circular(8),
+                                  trackGap: 3,
+                                  value:
+                                      (challenge.currentValue /
+                                              challenge.targetValue)
+                                          .clamp(0.0, 1.0),
+                                ),
                           ),
                         ],
                       ),
@@ -235,38 +262,207 @@ class _ChallangeCardState extends State<ChallangeCard> {
                     children: [
                       Row(
                         children: [
-                          //the progress value which i can change by typing into the text field
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.1,
-                            child: TextField(
-                              controller: progressedValue,
-                              onSubmitted: (_) => _updateProgressFromText(),
+                          // Enhanced weight input with modern design
+                          AnimatedContainer(
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 2,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: _isFocused
+                                    ? [
+                                        AppColors.primary,
+                                        AppColors.secondary,
+                                        AppColors.primary,
+                                      ]
+                                    : [
+                                        AppColors.metalLight.withOpacity(0.5),
+                                        AppColors.metalDark.withOpacity(0.5),
+                                      ],
+                              ),
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: _isFocused
+                                  ? [
+                                      BoxShadow(
+                                        color: AppColors.primary.withOpacity(
+                                          0.4,
+                                        ),
+                                        blurRadius: 12,
+                                        spreadRadius: 2,
+                                      ),
+                                    ]
+                                  : [],
+                            ),
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.25,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 6,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.4),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.fitness_center,
+                                    size: 16,
+                                    color: _isFocused
+                                        ? AppColors.primary
+                                        : AppColors.textSecondary.withOpacity(
+                                            0.7,
+                                          ),
+                                  ),
+                                  SizedBox(width: 6),
+                                  Expanded(
+                                    child: TextField(
+                                      controller: progressedValue,
+                                      keyboardType:
+                                          TextInputType.numberWithOptions(
+                                            decimal: true,
+                                          ),
+                                      onTap: () {
+                                        setState(() => _isFocused = true);
+                                      },
+                                      onEditingComplete: () {
+                                        setState(() => _isFocused = false);
+                                        _updateProgressFromText();
+                                      },
+                                      onSubmitted: (_) {
+                                        setState(() => _isFocused = false);
+                                        _updateProgressFromText();
+                                      },
+                                      style: TextStyle(
+                                        color: AppColors.textPrimary,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: 'Montserrat',
+                                      ),
+                                      cursorColor: AppColors.primary,
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        contentPadding: EdgeInsets.zero,
+                                        border: InputBorder.none,
+                                        hintText: '0',
+                                        hintStyle: TextStyle(
+                                          color: AppColors.textSecondary
+                                              .withOpacity(0.3),
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          // Enhanced separator and target display
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: isDone
+                                    ? [
+                                        Colors.green.withOpacity(0.2),
+                                        Colors.green.withOpacity(0.1),
+                                      ]
+                                    : [
+                                        AppColors.metalLight.withOpacity(0.3),
+                                        AppColors.metalDark.withOpacity(0.2),
+                                      ],
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: isDone
+                                    ? Colors.green.withOpacity(0.4)
+                                    : AppColors.metalLight.withOpacity(0.3),
+                                width: 1,
+                              ),
+                            ),
+                            child: Column(
+                              children: [
+                                Text(
+                                  'Target',
+                                  style: TextStyle(
+                                    color: isDone
+                                        ? Colors.green
+                                        : AppColors.textSecondary.withOpacity(
+                                            0.7,
+                                          ),
+                                    fontSize: 9,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: 'Montserrat',
+                                    letterSpacing: 0.5,
+                                  ),
+                                ),
+                                SizedBox(height: 2),
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.track_changes,
+                                      size: 12,
+                                      color: isDone
+                                          ? Colors.green
+                                          : AppColors.textPrimary,
+                                    ),
+                                    SizedBox(width: 3),
+                                    Text(
+                                      challenge.targetValue.toString(),
+                                      style: TextStyle(
+                                        color: AppColors.textPrimary,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 14,
+                                        fontFamily: 'Montserrat',
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          // Progress percentage indicator
+                          Container(
+                            padding: EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: isDone
+                                    ? [
+                                        Colors.green,
+                                        Colors.green.withOpacity(0.6),
+                                      ]
+                                    : [AppColors.primary, AppColors.secondary],
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: isDone
+                                      ? Colors.green.withOpacity(0.3)
+                                      : AppColors.primary.withOpacity(0.3),
+                                  blurRadius: 8,
+                                  spreadRadius: 1,
+                                ),
+                              ],
+                            ),
+                            child: Text(
+                              '${((challenge.currentValue / challenge.targetValue) * 100).clamp(0, 100).toInt()}%',
                               style: TextStyle(
-                                color: AppColors.textPrimary,
-                                fontSize: 15,
+                                color: Colors.white,
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Montserrat',
                               ),
-                              cursorColor: AppColors.textPrimary,
-                              decoration: InputDecoration(
-                                contentPadding: EdgeInsets.only(left: 15),
-                                border: InputBorder.none,
-                              ),
-                            ),
-                          ),
-                          Text(
-                            "/",
-                            style: TextStyle(
-                              color: AppColors.textPrimary,
-                              fontSize: 18,
-                            ),
-                          ),
-                          SizedBox(width: 2),
-                          Text(
-                            challenge.targetValue.toInt().toString(),
-                            style: TextStyle(
-                              color: AppColors.textPrimary,
-
-                              fontWeight: FontWeight.w400,
-                              fontSize: 15.5,
                             ),
                           ),
                         ],

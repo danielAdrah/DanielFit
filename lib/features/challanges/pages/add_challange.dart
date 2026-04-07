@@ -30,6 +30,13 @@ class _AddChallangeState extends State<AddChallange> {
   final progressValue = TextEditingController();
   String? challangeType;
   bool _isSubmitting = false;
+  late final ChallengeBloc _challengeBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _challengeBloc = context.read<ChallengeBloc>();
+  }
 
   @override
   void dispose() {
@@ -56,7 +63,6 @@ class _AddChallangeState extends State<AddChallange> {
     if (challangeDescription.text.trim().isEmpty) {
       return 'Please enter a challenge description';
     }
-
     // Validate challenge type
     if (challangeType == null) {
       return 'Please select a challenge type (Reps or Weight)';
@@ -189,114 +195,113 @@ class _AddChallangeState extends State<AddChallange> {
         child: SafeArea(
           child: Scaffold(
             backgroundColor: Colors.transparent,
-            body: SingleChildScrollView(
-              child: Center(
+            body: _buildBody(height, width),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBody(double height, double width) {
+    return SingleChildScrollView(
+      // CRITICAL: This prevents the entire widget tree from rebuilding
+      key: ValueKey('challenge_form'),
+      child: Center(
+        child: Column(
+          children: [
+            GearlessAppBar(width: width),
+            SizedBox(height: height * 0.08),
+            //text fields section
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: FadeInLeft(
+                delay: Duration(milliseconds: 700),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    GearlessAppBar(width: width),
-                    SizedBox(height: height * 0.08),
-                    //text fields section
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25),
-                      child: FadeInLeft(
-                        delay: Duration(milliseconds: 700),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            FormHeader(
-                              title: "Challenge Name",
-                              iconUrl: "assets/img/muscle.png",
-                            ),
-                            SizedBox(height: 5),
-                            CustomTextField(
-                              width: width,
-                              height: 40,
-                              controller: challangeName,
-                            ),
-                            SizedBox(height: height * 0.02),
-                            FormHeader(
-                              title: "Challenge Description",
-                              iconUrl: "assets/img/list.png",
-                            ),
-                            SizedBox(height: 5),
-                            CustomTextField(
-                              width: width,
-                              height: 70,
-                              controller: challangeDescription,
-                            ),
-                            SizedBox(height: height * 0.02),
-                            FormHeader(
-                              title: "Challenge Target",
-                              iconUrl: "assets/img/dumbell.png",
-                            ),
-                            SizedBox(height: 5),
-                            CustomTextField(
-                              width: width,
-                              height: 40,
-                              controller: targetValue,
-                              keyboardType: TextInputType.number,
-                            ),
-                            SizedBox(height: height * 0.02),
-                            FormHeader(
-                              title: "Initial Progress",
-                              iconUrl: "assets/img/dumbell.png",
-                            ),
-                            SizedBox(height: 5),
-                            CustomTextField(
-                              width: width,
-                              height: 40,
-                              controller: progressValue,
-                              keyboardType: TextInputType.number,
-                            ),
-                            SizedBox(height: height * 0.02),
-                            FormHeader(
-                              title: "Challenge Type",
-                              iconUrl: "assets/img/dumbell.png",
-                            ),
-                            SizedBox(height: 5),
-                            Wrap(
-                              spacing: 5,
-                              children: [
-                                MuscleChip(
-                                  isSelected: challangeType == "Reps"
-                                      ? true
-                                      : false,
-                                  muscleName: 'Reps',
-                                  onTap: () => _selectChallangeType("Reps"),
-                                ),
-                                MuscleChip(
-                                  isSelected: challangeType == "Weight"
-                                      ? true
-                                      : false,
-                                  muscleName: 'Weight',
-                                  onTap: () => _selectChallangeType("Weight"),
-                                ),
-                              ],
-                            ),
-                          ],
+                    FormHeader(
+                      title: "Challenge Name",
+                      iconUrl: "assets/img/muscle.png",
+                    ),
+                    SizedBox(height: 5),
+                    _buildTextField(challangeName, width, 40),
+                    SizedBox(height: height * 0.02),
+                    FormHeader(
+                      title: "Challenge Description",
+                      iconUrl: "assets/img/list.png",
+                    ),
+                    SizedBox(height: 5),
+                    _buildTextField(challangeDescription, width, 70),
+                    SizedBox(height: height * 0.02),
+                    FormHeader(
+                      title: "Challenge Target",
+                      iconUrl: "assets/img/dumbell.png",
+                    ),
+                    SizedBox(height: 5),
+                    _buildTextField(targetValue, width, 40, isNumber: true),
+                    SizedBox(height: height * 0.02),
+                    FormHeader(
+                      title: "Initial Progress",
+                      iconUrl: "assets/img/dumbell.png",
+                    ),
+                    SizedBox(height: 5),
+                    _buildTextField(progressValue, width, 40, isNumber: true),
+                    SizedBox(height: height * 0.02),
+                    FormHeader(
+                      title: "Challenge Type",
+                      iconUrl: "assets/img/dumbell.png",
+                    ),
+                    SizedBox(height: 5),
+                    Wrap(
+                      spacing: 5,
+                      children: [
+                        MuscleChip(
+                          isSelected: challangeType == "Reps" ? true : false,
+                          muscleName: 'Reps',
+                          onTap: () => _selectChallangeType("Reps"),
                         ),
-                      ),
+                        MuscleChip(
+                          isSelected: challangeType == "Weight" ? true : false,
+                          muscleName: 'Weight',
+                          onTap: () => _selectChallangeType("Weight"),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: height * 0.03),
-                    GradientDivider(width: width * 0.9),
-                    SizedBox(height: height * 0.04),
-                    FadeInRight(
-                      delay: Duration(milliseconds: 800),
-                      child: PrimaryBtn(
-                        title: _isSubmitting ? "Adding..." : "Add Challenge",
-                        widthMargin: width * 0.15,
-                        onTap: _isSubmitting ? () {} : _addChallenge,
-                      ),
-                    ),
-                    SizedBox(height: 50),
                   ],
                 ),
               ),
             ),
-          ),
+            SizedBox(height: height * 0.03),
+            GradientDivider(width: width * 0.9),
+            SizedBox(height: height * 0.04),
+            FadeInRight(
+              delay: Duration(milliseconds: 800),
+              child: PrimaryBtn(
+                title: _isSubmitting ? "Adding..." : "Add Challenge",
+                widthMargin: width * 0.15,
+                onTap: _isSubmitting ? () {} : _addChallenge,
+              ),
+            ),
+            SizedBox(height: 50),
+          ],
         ),
       ),
+    );
+  }
+
+  // Extracted text field builder for better performance
+  Widget _buildTextField(
+    TextEditingController controller,
+    double width,
+    double height, {
+    bool isNumber = false,
+  }) {
+    return CustomTextField(
+      width: width,
+      height: height,
+      controller: controller,
+      keyboardType: isNumber ? TextInputType.number : null,
     );
   }
 }

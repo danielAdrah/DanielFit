@@ -356,6 +356,9 @@ class _ChallangesViewState extends State<ChallangesView> {
                                           );
                                         },
                                         child: ChallangeCard(
+                                          key: ValueKey(
+                                            '${challenge.id}_${challenge.currentValue}',
+                                          ),
                                           challenge: challenge,
                                           onUpdateProgress: (newValue) {
                                             context.read<ChallengeBloc>().add(
@@ -575,6 +578,9 @@ class _ChallangesViewState extends State<ChallangesView> {
                                           );
                                         },
                                         child: ChallangeCard(
+                                          key: ValueKey(
+                                            '${challenge.id}_${challenge.currentValue}',
+                                          ),
                                           challenge: challenge,
                                           onUpdateProgress: (newValue) {},
                                           onComplete: () {},
