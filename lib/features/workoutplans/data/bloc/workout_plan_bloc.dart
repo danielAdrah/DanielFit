@@ -1,4 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
+import '../../../../core/models/workout_day_model.dart';
 import 'workout_plan_event.dart';
 import 'workout_plan_state.dart';
 import '../repositories/workout_plan_repository.dart';
@@ -23,6 +25,8 @@ class WorkoutPlanBloc extends Bloc<WorkoutPlanEvent, WorkoutPlanState> {
     on<RemoveWorkoutDayFromPlanEvent>(_onRemoveWorkoutDayFromPlan);
     on<LoadWorkoutDaysForPlanEvent>(_onLoadWorkoutDaysForPlan);
     on<LoadExercisesForDayEvent>(_onLoadExercisesForDay);
+    on<AddExerciseToDayEvent>(_onAddExerciseToDay);
+    on<RemoveExerciseFromDayEvent>(_onRemoveExerciseFromDay);
   }
 
   /// Handle Load All Workout Plans Event
@@ -247,6 +251,59 @@ class WorkoutPlanBloc extends Bloc<WorkoutPlanEvent, WorkoutPlanState> {
         event.exerciseIds,
       );
       emit(ExercisesLoaded(exercises));
+    } catch (e) {
+      emit(WorkoutPlanError(e.toString()));
+    }
+  }
+
+  /// Handle Add Exercise To Day Event
+  Future<void> _onAddExerciseToDay(
+    AddExerciseToDayEvent event,
+    Emitter<WorkoutPlanState> emit,
+  ) async {
+    try {
+      emit(const WorkoutPlanLoading());
+      await _repository.addExerciseToDay(event.workoutDayId, event.exerciseId);
+
+      // Reload the workout day to get updated exerciseIds
+      final workoutDaysBox = Hive.box<WorkoutDayModel>('workout_days');
+      final updatedDay = workoutDaysBox.get(event.workoutDayId);
+
+      if (updatedDay != null) {
+        final exercises = await _repository.getExercisesByDayIds(
+          updatedDay.exerciseIds,
+        );
+        emit(ExerciseUpdatedForDay(event.workoutDayId, exercises));
+      }
+    } catch (e) {
+      emit(WorkoutPlanError(e.toString()));
+    }
+  }
+
+  /// Handle Remove Exercise From Day Event
+  Future<void> _onRemoveExerciseFromDay(
+    RemoveExerciseFromDayEvent event,
+    Emitter<WorkoutPlanState> emit,
+  ) async {
+    try {
+      emit(const WorkoutPlanLoading());
+      await _repository.removeExerciseFromDay(
+        event.workoutDayId,
+        event.exerciseId,
+      );
+
+      // Reload the workout day to get updated exerciseIds
+      final workoutDaysBox = Hive.box<WorkoutDayModel>('workout_days');
+      final updatedDay = workoutDaysBox.get(event.workoutDayId);
+
+      if (updatedDay != null) {
+        final exercises = await _repository.getExercisesByDayIds(
+          updatedDay.exerciseIds,
+        );
+        emit(ExerciseUpdatedForDay(event.workoutDayId, exercises));
+        final workoutPlans = await _repository.getAllWorkoutPlans();
+        emit(WorkoutPlanLoaded(workoutPlans));
+      }
     } catch (e) {
       emit(WorkoutPlanError(e.toString()));
     }

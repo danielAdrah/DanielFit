@@ -25,7 +25,7 @@ class _ExercisesViewState extends State<ExercisesView> {
   List<String> muscleNames = [
     "Chest Exercises",
     "Back Exercises",
-    "Bieceps Exercises",
+    "Biceps Exercises",
     "Shoulders Exercises",
     "Triceps Exercises",
     "Legs Exercises",
@@ -45,7 +45,7 @@ class _ExercisesViewState extends State<ExercisesView> {
   List<String> targetedMuscles = [
     "Chest",
     "Back",
-    "Bieceps",
+    "Biceps",
     "Shoulders",
     "Triceps",
     "Legs",

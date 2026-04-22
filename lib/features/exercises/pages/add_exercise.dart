@@ -617,8 +617,8 @@ class _AddExerciseState extends State<AddExercise> {
     // Map variations to standard names
     if (normalized.contains('chest')) return 'Chest';
     if (normalized.contains('back')) return 'Back';
-    if (normalized.contains('biecep') || normalized.contains('bicep'))
-      return 'Bieceps';
+    if (normalized.contains('bicep') || normalized.contains('bicep'))
+      return 'Biceps';
     if (normalized.contains('tricep')) return 'Triceps';
     if (normalized.contains('shoulder')) return 'Shoulders';
     if (normalized.contains('leg')) return 'Legs';
@@ -1041,16 +1041,16 @@ class _AddExerciseState extends State<AddExercise> {
           right: width * 0.23,
           child: InkWell(
             splashColor: Colors.transparent,
-            onTap: () => _selectBodyPart("bieceps"),
+            onTap: () => _selectBodyPart("biceps"),
             child: Container(
               height: height * 0.06,
               width: width * 0.09,
               decoration: BoxDecoration(
-                color: selectedBodyPart == "bieceps"
+                color: selectedBodyPart == "biceps"
                     ? Colors.white.withOpacity(0.3)
                     : Colors.transparent,
                 border: Border.all(
-                  color: selectedBodyPart == "bieceps"
+                  color: selectedBodyPart == "biceps"
                       ? AppColors.cardBorder
                       : Colors.transparent,
                   width: 3,
@@ -1066,16 +1066,16 @@ class _AddExerciseState extends State<AddExercise> {
           left: width * 0.23,
           child: InkWell(
             splashColor: Colors.transparent,
-            onTap: () => _selectBodyPart("bieceps"),
+            onTap: () => _selectBodyPart("biceps"),
             child: Container(
               height: height * 0.06,
               width: width * 0.09,
               decoration: BoxDecoration(
-                color: selectedBodyPart == "bieceps"
+                color: selectedBodyPart == "biceps"
                     ? Colors.white.withOpacity(0.3)
                     : Colors.transparent,
                 border: Border.all(
-                  color: selectedBodyPart == "bieceps"
+                  color: selectedBodyPart == "biceps"
                       ? AppColors.cardBorder
                       : Colors.transparent,
                   width: 3,

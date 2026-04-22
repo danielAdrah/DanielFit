@@ -121,3 +121,25 @@ class LoadExercisesForDayEvent extends WorkoutPlanEvent {
   @override
   List<Object?> get props => [exerciseIds];
 }
+
+/// Event to add an exercise to a workout day
+class AddExerciseToDayEvent extends WorkoutPlanEvent {
+  final String workoutDayId;
+  final String exerciseId;
+
+  const AddExerciseToDayEvent(this.workoutDayId, this.exerciseId);
+
+  @override
+  List<Object?> get props => [workoutDayId, exerciseId];
+}
+
+/// Event to remove an exercise from a workout day
+class RemoveExerciseFromDayEvent extends WorkoutPlanEvent {
+  final String workoutDayId;
+  final String exerciseId;
+
+  const RemoveExerciseFromDayEvent(this.workoutDayId, this.exerciseId);
+
+  @override
+  List<Object?> get props => [workoutDayId, exerciseId];
+}

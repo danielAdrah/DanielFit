@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:get/get.dart';
 import '../../features/home/home_page.dart';
 
 class LoadingPage extends StatefulWidget {
@@ -33,7 +32,10 @@ class _LoadingPageState extends State<LoadingPage> {
     // Navigate to home page after
     Future.delayed(const Duration(seconds: 5), () {
       if (mounted) {
-        Get.to(() => HomePage());
+        // Get.to(() => HomePage());
+        Navigator.of(
+          context,
+        ).pushReplacement(MaterialPageRoute(builder: (context) => HomePage()));
       }
     });
   }

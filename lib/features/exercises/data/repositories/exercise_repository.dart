@@ -31,6 +31,9 @@ abstract class ExerciseRepository {
   /// Get exercises by target muscle
   Future<List<ExerciseModel>> getExercisesByMuscle(String muscle);
 
+  //Get exercises by a list of muscles
+  Future<List<ExerciseModel>> getExercisesByListOfMuscles(List<String> muscles);
+
   /// Get all favorite exercises
   Future<List<ExerciseModel>> getFavoriteExercises();
 
@@ -152,6 +155,23 @@ class ExerciseRepositoryImpl implements ExerciseRepository {
           .toList();
     } catch (e) {
       throw Exception('Failed to filter exercises by muscle: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<List<ExerciseModel>> getExercisesByListOfMuscles(
+    List<String> muscles,
+  ) async {
+    try {
+      return _exercisesBox.values
+          .where(
+            (exercise) =>
+                !exercise.isPlanExercise &&
+                muscles.contains(exercise.targetMuscle),
+          )
+          .toList();
+    } catch (e) {
+      throw Exception('Failed to load exercises: ${e.toString()}');
     }
   }
 

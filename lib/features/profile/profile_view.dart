@@ -37,15 +37,6 @@ class _ProfileViewState extends State<ProfileView> {
   File? image;
   String? imagePath;
   final imagePicker = ImagePicker();
-  @override
-  void initState() {
-    super.initState();
-    // Load statistics when the page is initialized
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<ProfileBloc>().add(const LoadProfileStatisticsEvent());
-    });
-    imagePath = storage.read('imagePath');
-  }
 
   uploadImage() async {
     var pickedImage = await imagePicker.pickImage(source: ImageSource.gallery);
@@ -55,6 +46,16 @@ class _ProfileViewState extends State<ProfileView> {
         storage.write('imagePath', pickedImage.path);
       });
     } else {}
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    imagePath = storage.read('imagePath');
+    // Load statistics when the page is initialized
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<ProfileBloc>().add(const LoadProfileStatisticsEvent());
+    });
   }
 
   @override

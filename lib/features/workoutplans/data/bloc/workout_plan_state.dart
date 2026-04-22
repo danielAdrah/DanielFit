@@ -143,3 +143,14 @@ class ExercisesLoaded extends WorkoutPlanState {
   @override
   List<Object?> get props => [exercises];
 }
+
+/// State when exercises for a workout day have been updated
+class ExerciseUpdatedForDay extends WorkoutPlanState {
+  final String workoutDayId;
+  final List<ExerciseModel> exercises;
+
+  const ExerciseUpdatedForDay(this.workoutDayId, this.exercises);
+
+  @override
+  List<Object?> get props => [workoutDayId, exercises];
+}

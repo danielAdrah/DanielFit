@@ -46,6 +46,12 @@ abstract class WorkoutPlanRepository {
   /// Load exercises for a specific workout day
   Future<List<ExerciseModel>> getExercisesByDayIds(List<String> exerciseIds);
 
+  /// Add exercise to day
+  Future<void> addExerciseToDay(String workoutDayId, String exerciseId);
+
+  /// Remove exercise from day
+  Future<void> removeExerciseFromDay(String workoutDayId, String exerciseId);
+
   /// Get total count of workout plans
   Future<int> getTotalWorkoutPlansCount();
 }
@@ -263,6 +269,51 @@ class WorkoutPlanRepositoryImpl implements WorkoutPlanRepository {
       return exercises;
     } catch (e) {
       throw Exception('Failed to load exercises: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<void> addExerciseToDay(String workoutDayId, String exerciseId) async {
+    try {
+      final workoutDay = _workoutDaysBox.get(workoutDayId);
+      if (workoutDay != null) {
+        if (!workoutDay.exerciseIds.contains(exerciseId)) {
+          final updatedExerciseIds = List<String>.from(workoutDay.exerciseIds)
+            ..add(exerciseId);
+
+          final updatedDay = workoutDay.copyWith(
+            exerciseIds: updatedExerciseIds,
+          );
+
+          await _workoutDaysBox.put(workoutDayId, updatedDay);
+        }
+      } else {
+        throw Exception('Workout day not found: $workoutDayId');
+      }
+    } catch (e) {
+      throw Exception('Failed to add exercise to day: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<void> removeExerciseFromDay(
+    String workoutDayId,
+    String exerciseId,
+  ) async {
+    try {
+      final workoutDay = _workoutDaysBox.get(workoutDayId);
+      if (workoutDay != null) {
+        final updatedExerciseIds = List<String>.from(workoutDay.exerciseIds)
+          ..remove(exerciseId);
+
+        final updatedDay = workoutDay.copyWith(exerciseIds: updatedExerciseIds);
+
+        await _workoutDaysBox.put(workoutDayId, updatedDay);
+      } else {
+        throw Exception('Workout day not found: $workoutDayId');
+      }
+    } catch (e) {
+      throw Exception('Failed to remove exercise from day: ${e.toString()}');
     }
   }
 

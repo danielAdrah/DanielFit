@@ -19,6 +19,7 @@ class ExerciseBloc extends Bloc<ExerciseEvent, ExerciseState> {
     on<ToggleFavoriteEvent>(_onToggleFavorite);
     on<ToggleHatedEvent>(_onToggleHated);
     on<GetExercisesByMuscleEvent>(_onGetExercisesByMuscle);
+    on<GetExercisesByMuscleList>(_onGetExercisesMusclesList);
     on<GetFavoriteExercisesEvent>(_onGetFavoriteExercises);
     on<GetHatedExercisesEvent>(_onGetHatedExercises);
     on<UpdateHighestWeightEvent>(_onUpdateHighestWeight);
@@ -168,6 +169,22 @@ class ExerciseBloc extends Bloc<ExerciseEvent, ExerciseState> {
       emit(ExerciseLoaded(exercises));
     } catch (e) {
       emit(ExerciseError(e.toString()));
+    }
+  }
+
+  //Handle get exercises by a muscle list
+  Future<void> _onGetExercisesMusclesList(
+    GetExercisesByMuscleList event,
+    Emitter<ExerciseState> emit,
+  ) async {
+    try {
+      emit(const FilterdExercisesLoading());
+      final exercises = await _repository.getExercisesByListOfMuscles(
+        event.muscles,
+      );
+      emit(FilterdExercisesLoaded(exercises));
+    } catch (e) {
+      emit(FilteredExerciseError(e.toString()));
     }
   }
 

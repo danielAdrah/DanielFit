@@ -86,6 +86,16 @@ class GetExercisesByMuscleEvent extends ExerciseEvent {
   List<Object?> get props => [muscle];
 }
 
+//Event to get exercises by a list of exercises
+class GetExercisesByMuscleList extends ExerciseEvent {
+  final List<String> muscles;
+
+  const GetExercisesByMuscleList(this.muscles);
+
+  @override
+  List<Object?> get props => [muscles];
+}
+
 /// Event to get all favorite exercises
 class GetFavoriteExercisesEvent extends ExerciseEvent {
   const GetFavoriteExercisesEvent();

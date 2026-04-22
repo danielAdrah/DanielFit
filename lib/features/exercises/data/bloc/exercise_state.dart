@@ -29,6 +29,28 @@ class ExerciseLoaded extends ExerciseState {
   List<Object?> get props => [exercises];
 }
 
+class FilterdExercisesLoaded extends ExerciseState {
+  final List<ExerciseModel> exercises;
+
+  const FilterdExercisesLoaded(this.exercises);
+
+  @override
+  List<Object?> get props => [exercises];
+}
+
+class FilterdExercisesLoading extends ExerciseState {
+  const FilterdExercisesLoading();
+}
+
+class FilteredExerciseError extends ExerciseState {
+  final String message;
+
+  const FilteredExerciseError(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
 /// Single exercise loaded successfully
 class ExerciseDetailLoaded extends ExerciseState {
   final ExerciseModel exercise;

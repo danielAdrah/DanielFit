@@ -272,7 +272,12 @@ class _ChallangeCardState extends State<ChallangeCard> {
                             ),
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
-                                colors: _isFocused
+                                colors: isDone
+                                    ? [
+                                        AppColors.metalLight.withOpacity(0.5),
+                                        AppColors.metalDark.withOpacity(0.5),
+                                      ]
+                                    : _isFocused
                                     ? [
                                         AppColors.primary,
                                         AppColors.secondary,
@@ -284,7 +289,9 @@ class _ChallangeCardState extends State<ChallangeCard> {
                                       ],
                               ),
                               borderRadius: BorderRadius.circular(12),
-                              boxShadow: _isFocused
+                              boxShadow: isDone
+                                  ? []
+                                  : _isFocused
                                   ? [
                                       BoxShadow(
                                         color: AppColors.primary.withOpacity(
@@ -311,7 +318,9 @@ class _ChallangeCardState extends State<ChallangeCard> {
                                   Icon(
                                     Icons.fitness_center,
                                     size: 16,
-                                    color: _isFocused
+                                    color: isDone && _isFocused
+                                        ? Colors.green
+                                        : _isFocused
                                         ? AppColors.primary
                                         : AppColors.textSecondary.withOpacity(
                                             0.7,
@@ -320,6 +329,7 @@ class _ChallangeCardState extends State<ChallangeCard> {
                                   SizedBox(width: 6),
                                   Expanded(
                                     child: TextField(
+                                      readOnly: isDone,
                                       controller: progressedValue,
                                       keyboardType:
                                           TextInputType.numberWithOptions(

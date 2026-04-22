@@ -440,7 +440,7 @@ class _MuscleExerciseState extends State<MuscleExercise> {
                                           muscleName: exercise.name,
                                           imgUrl:
                                               exercise.imagePath ??
-                                              'assets/img/chest1.png',
+                                              'assets/img/dumbell.png',
                                         ),
                                       ),
                                     ),
