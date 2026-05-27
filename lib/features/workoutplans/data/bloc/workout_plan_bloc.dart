@@ -21,6 +21,10 @@ class WorkoutPlanBloc extends Bloc<WorkoutPlanEvent, WorkoutPlanState> {
     on<ToggleWorkoutPlanFavoriteEvent>(_onToggleWorkoutPlanFavorite);
     on<GetWorkoutPlansByCategoryEvent>(_onGetWorkoutPlansByCategory);
     on<GetFavoriteWorkoutPlansEvent>(_onGetFavoriteWorkoutPlans);
+    on<GenerateWorkoutPlanScheduleEvent>(_onGenerateWorkoutPlanSchedule);
+    on<UpdateWorkoutPlanScheduleSettingsEvent>(
+      _onUpdateWorkoutPlanScheduleSettings,
+    );
     on<AddWorkoutDayToPlanEvent>(_onAddWorkoutDayToPlan);
     on<RemoveWorkoutDayFromPlanEvent>(_onRemoveWorkoutDayFromPlan);
     on<LoadWorkoutDaysForPlanEvent>(_onLoadWorkoutDaysForPlan);
@@ -251,6 +255,55 @@ class WorkoutPlanBloc extends Bloc<WorkoutPlanEvent, WorkoutPlanState> {
         event.exerciseIds,
       );
       emit(ExercisesLoaded(exercises));
+    } catch (e) {
+      emit(WorkoutPlanError(e.toString()));
+    }
+  }
+
+  /// Handle Generate Workout Plan Schedule Event
+  Future<void> _onGenerateWorkoutPlanSchedule(
+    GenerateWorkoutPlanScheduleEvent event,
+    Emitter<WorkoutPlanState> emit,
+  ) async {
+    try {
+      emit(const WorkoutPlanLoading());
+      final schedule = await _repository.getWorkoutPlanSchedule(
+        event.workoutPlanId,
+        scheduleStartDate: event.scheduleStartDate,
+        horizonDays: event.horizonDays,
+      );
+      emit(WorkoutPlanScheduleLoaded(schedule));
+    } catch (e) {
+      emit(WorkoutPlanError(e.toString()));
+    }
+  }
+
+  /// Handle Update Workout Plan Schedule Settings Event
+  Future<void> _onUpdateWorkoutPlanScheduleSettings(
+    UpdateWorkoutPlanScheduleSettingsEvent event,
+    Emitter<WorkoutPlanState> emit,
+  ) async {
+    try {
+      emit(const WorkoutPlanLoading());
+      final workoutPlan = await _repository.getWorkoutPlanById(
+        event.workoutPlanId,
+      );
+
+      if (workoutPlan == null) {
+        emit(const WorkoutPlanError('Workout plan not found'));
+        return;
+      }
+
+      final updatedPlan = workoutPlan.copyWith(
+        startDate: event.startDate,
+        restDays: event.restDays,
+      );
+
+      await _repository.updateWorkoutPlan(updatedPlan);
+      emit(WorkoutPlanUpdated(updatedPlan));
+
+      final workoutPlans = await _repository.getAllWorkoutPlans();
+      emit(WorkoutPlanLoaded(workoutPlans));
     } catch (e) {
       emit(WorkoutPlanError(e.toString()));
     }

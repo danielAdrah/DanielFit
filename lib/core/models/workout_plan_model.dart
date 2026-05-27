@@ -1,3 +1,5 @@
+import 'dart:core';
+
 import 'package:hive/hive.dart';
 part 'workout_plan_model.g.dart';
 
@@ -24,6 +26,12 @@ class WorkoutPlanModel extends HiveObject {
   @HiveField(6)
   List<String> muscleCombinations;
 
+  @HiveField(7)
+  DateTime? startDate;
+
+  @HiveField(8)
+  List<int> restDays;
+
   WorkoutPlanModel({
     required this.id,
     required this.planName,
@@ -32,8 +40,11 @@ class WorkoutPlanModel extends HiveObject {
     DateTime? createdAt,
     this.description,
     List<String>? muscleCombinations,
+    this.startDate,
+    List<int>? restDays,
   }) : workoutDayIds = workoutDayIds ?? [],
        muscleCombinations = muscleCombinations ?? [],
+       restDays = restDays ?? [],
        createdAt = createdAt ?? DateTime.now();
 
   WorkoutPlanModel copyWith({
@@ -44,6 +55,8 @@ class WorkoutPlanModel extends HiveObject {
     DateTime? createdAt,
     String? description,
     List<String>? muscleCombinations,
+    DateTime? startDate,
+    List<int>? restDays,
   }) {
     return WorkoutPlanModel(
       id: id ?? this.id,
@@ -53,6 +66,8 @@ class WorkoutPlanModel extends HiveObject {
       createdAt: createdAt ?? this.createdAt,
       description: description ?? this.description,
       muscleCombinations: muscleCombinations ?? this.muscleCombinations,
+      startDate: startDate ?? this.startDate,
+      restDays: restDays ?? this.restDays,
     );
   }
 
@@ -65,6 +80,8 @@ class WorkoutPlanModel extends HiveObject {
       'createdAt': createdAt.toIso8601String(),
       'description': description,
       'muscleCombinations': muscleCombinations,
+      'startDate': startDate?.toIso8601String(),
+      'restDays': restDays,
     };
   }
 
@@ -79,6 +96,10 @@ class WorkoutPlanModel extends HiveObject {
           : DateTime.now(),
       description: json['description'],
       muscleCombinations: List<String>.from(json['muscleCombinations'] ?? []),
+      startDate: json['startDate'] != null
+          ? DateTime.parse(json['startDate'])
+          : null,
+      restDays: List<int>.from(json['restDays'] ?? []),
     );
   }
 }

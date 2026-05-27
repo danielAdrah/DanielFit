@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
+  static List<Color> grediantBg = [primary, secondary];
   static const primary = Color(0xFFFF2A2A);
   static const secondary = Color(0xFFC1121F);
 

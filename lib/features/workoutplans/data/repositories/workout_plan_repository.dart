@@ -2,6 +2,8 @@ import 'package:hive/hive.dart';
 import '../../../../core/models/workout_plan_model.dart';
 import '../../../../core/models/workout_day_model.dart';
 import '../../../../core/models/exercise_model.dart';
+import '../models/workout_schedule_entry.dart';
+import '../workout_plan_scheduler.dart';
 
 /// Repository interface for WorkoutPlan data operations
 abstract class WorkoutPlanRepository {
@@ -45,6 +47,13 @@ abstract class WorkoutPlanRepository {
 
   /// Load exercises for a specific workout day
   Future<List<ExerciseModel>> getExercisesByDayIds(List<String> exerciseIds);
+
+  /// Generate a derived workout schedule for the selected plan.
+  Future<List<WorkoutScheduleEntry>> getWorkoutPlanSchedule(
+    String workoutPlanId, {
+    DateTime? scheduleStartDate,
+    int horizonDays = 30,
+  });
 
   /// Add exercise to day
   Future<void> addExerciseToDay(String workoutDayId, String exerciseId);
@@ -269,6 +278,36 @@ class WorkoutPlanRepositoryImpl implements WorkoutPlanRepository {
       return exercises;
     } catch (e) {
       throw Exception('Failed to load exercises: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<List<WorkoutScheduleEntry>> getWorkoutPlanSchedule(
+    String workoutPlanId, {
+    DateTime? scheduleStartDate,
+    int horizonDays = 30,
+  }) async {
+    try {
+      final workoutPlan = await getWorkoutPlanById(workoutPlanId);
+      if (workoutPlan == null) {
+        return [];
+      }
+
+      final workoutDays = await getWorkoutDaysByPlanIds(
+        workoutPlan.workoutDayIds,
+      );
+
+      return WorkoutPlanScheduler.generateSchedule(
+        planStartDate: workoutPlan.startDate ?? DateTime.now(),
+        scheduleStartDate: scheduleStartDate ?? DateTime.now(),
+        workoutDays: workoutDays,
+        restWeekDays: workoutPlan.restDays,
+        horizonDays: horizonDays,
+      );
+    } catch (e) {
+      throw Exception(
+        'Failed to generate workout plan schedule: ${e.toString()}',
+      );
     }
   }
 

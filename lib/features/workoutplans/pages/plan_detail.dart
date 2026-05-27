@@ -13,6 +13,8 @@ import '../data/bloc/workout_plan_event.dart';
 import '../data/bloc/workout_plan_state.dart';
 import 'day_details.dart';
 import '../widgets/training_day_tile.dart';
+import 'workout_calendar_page.dart';
+import '../widgets/schedule_settings_sheet.dart';
 
 class PlanDetail extends StatefulWidget {
   const PlanDetail({super.key, required this.plan});
@@ -22,9 +24,12 @@ class PlanDetail extends StatefulWidget {
 }
 
 class _PlanDetailState extends State<PlanDetail> {
+  late WorkoutPlanModel _plan;
+
   @override
   void initState() {
     super.initState();
+    _plan = widget.plan;
   }
 
   @override
@@ -36,11 +41,96 @@ class _PlanDetailState extends State<PlanDetail> {
     return BlocProvider(
       create: (context) =>
           WorkoutPlanBloc()
-            ..add(LoadWorkoutDaysForPlanEvent(widget.plan.workoutDayIds)),
+            ..add(LoadWorkoutDaysForPlanEvent(_plan.workoutDayIds)),
       child: AppBackground(
         child: SafeArea(
           child: Scaffold(
             backgroundColor: Colors.transparent,
+            floatingActionButton: FadeInRight(
+              delay: Duration(milliseconds: 700),
+              child: FloatingActionButton(
+                backgroundColor: Colors.transparent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                onPressed: () {
+                  showModalBottomSheet<WorkoutPlanModel>(
+                    context: context,
+                    backgroundColor: Colors.transparent,
+                    isScrollControlled: true,
+                    builder: (context) => ScheduleSettingsSheet(plan: _plan),
+                  ).then((updatedPlan) {
+                    if (updatedPlan != null) {
+                      setState(() {
+                        _plan = updatedPlan;
+                      });
+                      context.read<WorkoutPlanBloc>().add(
+                        UpdateWorkoutPlanEvent(updatedPlan),
+                      );
+                      Get.to(
+                        () => WorkoutCalendarPage(
+                          workoutPlan: updatedPlan,
+                          //the length of the workout plan.
+                          horizonDays: 125,
+                        ),
+                      );
+                    }
+                  });
+                },
+                child: Stack(
+                  children: [
+                    Container(
+                      // width: 100,
+                      // height: 100,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          image: AssetImage("assets/img/bg3.jpg"),
+                          fit: BoxFit.cover,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.6),
+                            blurRadius: 10,
+                            offset: Offset(0, 5),
+                            spreadRadius: 0,
+                          ),
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            blurRadius: 15,
+                            offset: Offset(0, 8),
+                            spreadRadius: -3,
+                          ),
+                          BoxShadow(
+                            color: Colors.white.withOpacity(0.1),
+                            blurRadius: 6,
+                            offset: Offset(0, -3),
+                            spreadRadius: 0,
+                          ),
+                        ],
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.calendar_today,
+                          color: AppColors.primary,
+                          size: 25,
+                        ),
+                      ),
+                    ),
+                    Positioned.fill(
+                      child: Container(
+                        // width: 100,
+                        // height: 100,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.black.withOpacity(0.3),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
 
             body: CustomScrollView(
               physics: BouncingScrollPhysics(),

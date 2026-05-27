@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import '../../../../core/models/workout_plan_model.dart';
 import '../../../../core/models/workout_day_model.dart';
 import '../../../../core/models/exercise_model.dart';
+import '../models/workout_schedule_entry.dart';
 
 /// Base state for WorkoutPlan BLoC
 abstract class WorkoutPlanState extends Equatable {
@@ -153,4 +154,14 @@ class ExerciseUpdatedForDay extends WorkoutPlanState {
 
   @override
   List<Object?> get props => [workoutDayId, exercises];
+}
+
+/// State when a workout plan schedule has been generated successfully
+class WorkoutPlanScheduleLoaded extends WorkoutPlanState {
+  final List<WorkoutScheduleEntry> scheduleEntries;
+
+  const WorkoutPlanScheduleLoaded(this.scheduleEntries);
+
+  @override
+  List<Object?> get props => [scheduleEntries];
 }

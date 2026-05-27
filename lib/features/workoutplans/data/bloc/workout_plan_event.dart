@@ -80,6 +80,38 @@ class GetFavoriteWorkoutPlansEvent extends WorkoutPlanEvent {
   const GetFavoriteWorkoutPlansEvent();
 }
 
+/// Event to generate a schedule timeline for a workout plan.
+class GenerateWorkoutPlanScheduleEvent extends WorkoutPlanEvent {
+  final String workoutPlanId;
+  final DateTime? scheduleStartDate;
+  final int horizonDays;
+
+  const GenerateWorkoutPlanScheduleEvent(
+    this.workoutPlanId, {
+    this.scheduleStartDate,
+    this.horizonDays = 30,
+  });
+
+  @override
+  List<Object?> get props => [workoutPlanId, scheduleStartDate, horizonDays];
+}
+
+/// Event to update workout plan schedule metadata.
+class UpdateWorkoutPlanScheduleSettingsEvent extends WorkoutPlanEvent {
+  final String workoutPlanId;
+  final DateTime startDate;
+  final List<int> restDays;
+
+  const UpdateWorkoutPlanScheduleSettingsEvent({
+    required this.workoutPlanId,
+    required this.startDate,
+    required this.restDays,
+  });
+
+  @override
+  List<Object?> get props => [workoutPlanId, startDate, restDays];
+}
+
 /// Event to add workout day to plan
 class AddWorkoutDayToPlanEvent extends WorkoutPlanEvent {
   final String workoutPlanId;

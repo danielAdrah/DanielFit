@@ -24,13 +24,15 @@ class WorkoutPlanModelAdapter extends TypeAdapter<WorkoutPlanModel> {
       createdAt: fields[4] as DateTime?,
       description: fields[5] as String?,
       muscleCombinations: (fields[6] as List?)?.cast<String>(),
+      startDate: fields[7] as DateTime?,
+      restDays: (fields[8] as List?)?.cast<int>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, WorkoutPlanModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -44,7 +46,11 @@ class WorkoutPlanModelAdapter extends TypeAdapter<WorkoutPlanModel> {
       ..writeByte(5)
       ..write(obj.description)
       ..writeByte(6)
-      ..write(obj.muscleCombinations);
+      ..write(obj.muscleCombinations)
+      ..writeByte(7)
+      ..write(obj.startDate)
+      ..writeByte(8)
+      ..write(obj.restDays);
   }
 
   @override
