@@ -1,7 +1,8 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 
 import '../../../core/theme.dart';
-import '../pages/workout_plans_view.dart';
 
 class TrainigDaysTille extends StatelessWidget {
   const TrainigDaysTille({
@@ -61,7 +62,51 @@ class TrainigDaysTille extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              DaysTag(width: width, height: height, days: days),
+              // DaysTag(width: width, height: height, days: days),
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      AppColors.secondary,
+                      AppColors.primary.withOpacity(0.3),
+                    ],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.6),
+                      blurRadius: 10,
+                      offset: Offset(0, 5),
+                      spreadRadius: 0,
+                    ),
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.3),
+                      blurRadius: 15,
+                      offset: Offset(0, 8),
+                      spreadRadius: -3,
+                    ),
+                    BoxShadow(
+                      color: Colors.red.withOpacity(0.1),
+                      blurRadius: 6,
+                      offset: Offset(0, -3),
+                      spreadRadius: 0,
+                    ),
+                  ],
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Text(
+                    days,
+                    style: TextStyle(
+                      color: AppColors.textPrimary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+
               Text(
                 muscles,
                 style: TextStyle(

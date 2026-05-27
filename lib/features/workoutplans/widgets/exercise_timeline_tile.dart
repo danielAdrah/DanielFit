@@ -335,19 +335,9 @@ class _ExerciseTimelineTileState extends State<ExerciseTimelineTile> {
                 onTap: () => _updateTargetMuscles('Abs'),
               ),
               MuscleChip(
-                muscleName: 'Quads',
-                isSelected: widget.day.targetMuscles.contains('Quads'),
-                onTap: () => _updateTargetMuscles('Quads'),
-              ),
-              MuscleChip(
-                muscleName: 'Hamstrings',
-                isSelected: widget.day.targetMuscles.contains('Hamstrings'),
-                onTap: () => _updateTargetMuscles('Hamstrings'),
-              ),
-              MuscleChip(
-                muscleName: 'Calves',
-                isSelected: widget.day.targetMuscles.contains('Calves'),
-                onTap: () => _updateTargetMuscles('Calves'),
+                muscleName: 'Legs',
+                isSelected: widget.day.targetMuscles.contains('Legs'),
+                onTap: () => _updateTargetMuscles('Legs'),
               ),
             ],
           ),

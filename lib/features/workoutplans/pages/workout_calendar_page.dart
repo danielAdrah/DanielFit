@@ -57,10 +57,6 @@ class _WorkoutCalendarPageState extends State<WorkoutCalendarPage> {
     return '${date.year}/${date.month.toString().padLeft(2, '0')}/${date.day.toString().padLeft(2, '0')}';
   }
 
-  String _formatTime(DateTime dateTime) {
-    return '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
-  }
-
   WorkoutScheduleEntry? _findEntryForAppointment(Appointment event) {
     for (final entry in _scheduleEntries) {
       final entryDate = DateTime(
@@ -251,7 +247,7 @@ class _WorkoutCalendarPageState extends State<WorkoutCalendarPage> {
                               margin: EdgeInsets.all(20),
                               padding: EdgeInsets.all(15),
                               decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.3),
+                                color: Colors.black.withOpacity(0.15),
                                 borderRadius: BorderRadius.circular(24),
                               ),
                             ),

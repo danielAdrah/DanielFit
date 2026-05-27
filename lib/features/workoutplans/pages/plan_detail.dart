@@ -261,7 +261,7 @@ class _PlanDetailState extends State<PlanDetail> {
                                     child: TrainigDaysTille(
                                       muscles: day.dayName,
                                       //display the number of exercises for each day.
-                                      days: day.targetMuscles.length.toString(),
+                                      days: "${index + 1}",
                                       width: width,
                                       height: height,
                                     ),
