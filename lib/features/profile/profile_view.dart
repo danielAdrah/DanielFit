@@ -332,6 +332,7 @@ class _ProfileViewState extends State<ProfileView> {
                         child: FavoriteExerciseTile(
                           width: width,
                           height: height,
+                          title: "Squat 😈",
                         ),
                       ),
                       SizedBox(height: height * 0.04),
@@ -358,10 +359,180 @@ class _ProfileViewState extends State<ProfileView> {
                       ),
                       SizedBox(height: 20),
                       GradientDivider(width: width * 0.9),
-                      SizedBox(height: 30),
+                      SizedBox(height: 20),
+                      FadeInLeft(
+                        delay: Duration(milliseconds: 700),
+                        child: Row(
+                          children: [
+                            Image.asset(
+                              "assets/img/back-up.png",
+                              width: 18,
+                              height: 18,
+                            ),
+
+                            SizedBox(width: 4),
+                            Text(
+                              "Back-Up & Restore",
+                              style: TextStyle(
+                                color: AppColors.textSecondary,
+                                fontFamily: "Montserrat",
+                                fontWeight: FontWeight.w600,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Stack(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 20,
+                            ),
+                            width: width,
+                            // height: height * 0.1,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: AppColors.metalLight.withOpacity(0.6),
+                                width: 1.5,
+                              ),
+                              image: DecorationImage(
+                                image: AssetImage("assets/img/bg3.jpg"),
+                                fit: BoxFit.cover,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.6),
+                                  blurRadius: 10,
+                                  offset: Offset(0, 5),
+                                  spreadRadius: 0,
+                                ),
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.3),
+                                  blurRadius: 15,
+                                  offset: Offset(0, 8),
+                                  spreadRadius: -3,
+                                ),
+                                BoxShadow(
+                                  color: Colors.red.withOpacity(0.1),
+                                  blurRadius: 6,
+                                  offset: Offset(0, -3),
+                                  spreadRadius: 0,
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    // Handle back-up action
+                                    print("1");
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "💾",
+                                        style: TextStyle(
+                                          color: AppColors.textPrimary,
+                                          fontFamily: "Montserrat",
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        "Back-Up",
+                                        style: TextStyle(
+                                          color: AppColors.textPrimary,
+                                          fontFamily: "Montserrat",
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                Container(
+                                  height: 2,
+                                  width: width,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        // AppColors.cardBorder.withOpacity(0.4),
+                                        const Color.fromARGB(
+                                          255,
+                                          158,
+                                          152,
+                                          152,
+                                        ).withOpacity(0.8),
+                                        AppColors.metalLight.withOpacity(0.7),
+                                        const Color.fromARGB(
+                                          255,
+                                          158,
+                                          152,
+                                          152,
+                                        ).withOpacity(0.8),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                InkWell(
+                                  onTap: () {
+                                    print("2");
+                                    // Handle restore action
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "📲",
+                                        style: TextStyle(
+                                          color: AppColors.textPrimary,
+                                          fontFamily: "Montserrat",
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                      Text(
+                                        "Restore",
+                                        style: TextStyle(
+                                          color: AppColors.textPrimary,
+                                          fontFamily: "Montserrat",
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Positioned.fill(
+                            child: IgnorePointer(
+                              child: Container(
+                                // width: width,
+                                // height: 40,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: Colors.black.withOpacity(0.5),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
+                SizedBox(height: 20),
               ],
             ),
           ),
@@ -376,10 +547,12 @@ class FavoriteExerciseTile extends StatelessWidget {
     super.key,
     required this.width,
     required this.height,
+    required this.title,
   });
 
   final double width;
   final double height;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -423,7 +596,7 @@ class FavoriteExerciseTile extends StatelessWidget {
           child: Row(
             children: [
               Text(
-                "Squat 😈",
+                title,
                 style: TextStyle(
                   color: AppColors.textPrimary,
                   fontFamily: "Montserrat",
@@ -509,6 +682,86 @@ class NameAndTrainingDate extends StatelessWidget {
         //     fontSize: 12,
         //   ),
         // ),
+      ],
+    );
+  }
+}
+
+class SettingsTile extends StatelessWidget {
+  const SettingsTile({
+    super.key,
+    required this.width,
+    required this.height,
+    required this.title,
+  });
+
+  final double width;
+  final double height;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          width: width,
+          height: height * 0.05,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: AppColors.metalLight.withOpacity(0.6),
+              width: 1.5,
+            ),
+            image: DecorationImage(
+              image: AssetImage("assets/img/bg3.jpg"),
+              fit: BoxFit.cover,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.6),
+                blurRadius: 10,
+                offset: Offset(0, 5),
+                spreadRadius: 0,
+              ),
+              BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                blurRadius: 15,
+                offset: Offset(0, 8),
+                spreadRadius: -3,
+              ),
+              BoxShadow(
+                color: Colors.red.withOpacity(0.1),
+                blurRadius: 6,
+                offset: Offset(0, -3),
+                spreadRadius: 0,
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Text(
+                title,
+                style: TextStyle(
+                  color: AppColors.textPrimary,
+                  fontFamily: "Montserrat",
+                  fontWeight: FontWeight.w600,
+                  fontSize: 17,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Positioned.fill(
+          child: Container(
+            // width: width,
+            // height: 40,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.black.withOpacity(0.5),
+            ),
+          ),
+        ),
       ],
     );
   }
